@@ -23,7 +23,6 @@ public class CommandFragment extends Fragment {
 		private Spinner mWhoSpinner;
 		private Spinner mWhereSpinner;
 		private EditText mCommandTitleEditText;
-		private EditText mGroupTitleEditText;
 		private Command mCommand;
 
 		@Override
@@ -31,7 +30,7 @@ public class CommandFragment extends Fragment {
 			super.onCreate(savedInstanceState);
 			mCommand=new Command();
 			UUID commandId=(UUID)getArguments().getSerializable(EXTRA_COMMAND_ID);
-			mCommand=Dashboard.get(getActivity()).getCommand(commandId);
+			mCommand= Dashboard.get(getActivity()).getCommand(commandId);
 		}
 			
 		@Override
@@ -54,28 +53,7 @@ public class CommandFragment extends Fragment {
 				@Override
 				public void afterTextChanged(Editable s) {}
 			});
-
-			mGroupTitleEditText=(EditText)v.findViewById(R.id.group_title_edit_text);
-			mGroupTitleEditText.setText(mCommand.getGroupTitle());
-			mGroupTitleEditText.addTextChangedListener(new TextWatcher() {
-
-				@Override
-				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-				}
-
-				@Override
-				public void onTextChanged(CharSequence s, int start, int before, int count) {
-					mCommand.setGroupTitle(s.toString());
-				}
-
-				@Override
-				public void afterTextChanged(Editable s) {
-
-				}
-			});
-
-				mWhoSpinner=(Spinner)v.findViewById(R.id.command_who_spinner);
+			mWhoSpinner=(Spinner)v.findViewById(R.id.command_who_spinner);
 			ArrayAdapter<CharSequence>mWhoAdapter=ArrayAdapter
 					.createFromResource(getActivity(), R.array.who_array, android.R.layout.simple_spinner_item);
 			mWhoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

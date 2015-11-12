@@ -3,11 +3,8 @@ package com.fabiani.domohome.app;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.*;
-import android.text.InputType;
-import android.util.Log;
 import android.util.Patterns;
 import android.widget.Toast;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

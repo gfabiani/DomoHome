@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.*;
 import android.widget.*;
+
 import java.util.ArrayList;
 
 /**
@@ -93,7 +94,7 @@ public class CommandGridFragment extends Fragment {
                 mLightingCommands = Dashboard.filter(mCommands, new CommandPredicate() {//lambda: mLightingCommands=Dashboard.filter(mCommands, (Command command)-> command.getWho()==1)
                     @Override
                     public boolean test(Command command) {
-                        return command.getWho() == 1;
+                        return command.getWho() == 1 ;
                     }
                 });
                 setupAdapter(mLightingCommands);

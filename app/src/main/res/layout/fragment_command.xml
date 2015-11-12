@@ -16,18 +16,6 @@
         android:hint="@string/command_title_hint"
         android:layout_marginBottom="10dp"
         android:inputType="textAutoCorrect"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/group_label"
-        style="?android:listSeparatorTextViewStyle"/>
-    <EditText
-        android:id="@+id/group_title_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/command_title_hint"
-        android:layout_marginBottom="10dp"
-        android:inputType="textAutoCorrect"/>
     <TextView 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

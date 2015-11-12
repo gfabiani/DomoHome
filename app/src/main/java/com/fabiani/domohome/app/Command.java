@@ -4,11 +4,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.UUID;
 
-final class Command {
+class Command {
     static final Integer[] sWhereChoices = new Integer[99];
     private static final String JSON_ID = "id";
     private static final String JSON_COMMAND_TITLE = "command_title";
-    private static final String JSON_GROUP_TITLE = "group_title";
     private static final String JSON_WHAT = "what";
     private static final String JSON_WHO = "who";
     private static final String JSON_WHO_SPINNER_POSITION = "who_spinner_position";
@@ -16,12 +15,12 @@ final class Command {
     private static final String JSON_WHERE_SPINNER_POSITION = "where_spinner_position";
     private UUID mId;
     private String mCommandTitle;
-    private String mGroupTitle;
     private int mWhat;
     private int mWho;
     private int mWhoSpinnerPosition;
     private int mWhere;
     private int mWhereSpinnerPosition;
+    private Group mGroup;
 
     enum WhoChoice {SCENARIOS(0), LIGHTING(1),AUTOMATISM(2),ELECTRICAL_LOADS(3),WARMING_MANAGEMENT(4), ANTITHEFT(5),
         BASIC_VIDEO_DOORPHONE(6),GATEWAY_MANAGEMENT(13),CEN_COMMANDS(15),SOUND_DIFFUSION(16), MH200N_SCENARIOS(17),
@@ -49,7 +48,6 @@ final class Command {
     public Command(JSONObject json) throws JSONException {
         mId = UUID.fromString(json.getString(JSON_ID));// pay attention to this!
         mCommandTitle = json.getString(JSON_COMMAND_TITLE);
-        mGroupTitle=json.getString(JSON_GROUP_TITLE);
         mWhat = json.getInt(JSON_WHAT);
         mWho = json.getInt(JSON_WHO);
         mWhoSpinnerPosition = json.getInt(JSON_WHO_SPINNER_POSITION);
@@ -62,7 +60,6 @@ final class Command {
         JSONObject json = new JSONObject();
         json.put(JSON_ID, mId.toString());
         json.put(JSON_COMMAND_TITLE, mCommandTitle);
-        json.put(JSON_GROUP_TITLE,mCommandTitle);
         json.put(JSON_WHAT, mWhat);
         json.put(JSON_WHO, mWho);
         json.put(JSON_WHO_SPINNER_POSITION, mWhoSpinnerPosition);
@@ -70,7 +67,6 @@ final class Command {
         json.put(JSON_WHERE_SPINNER_POSITION, mWhereSpinnerPosition);
         return json;
     }
-
 
     //getters and setters
     public UUID getId() {
@@ -83,14 +79,6 @@ final class Command {
 
     public String getCommandTitle() {
         return mCommandTitle;
-    }
-
-    public void setGroupTitle(String title) {
-        mGroupTitle = title;
-    }
-
-    public String getGroupTitle() {
-        return mGroupTitle;
     }
 
     public void setWho(int who) {

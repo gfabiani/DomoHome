@@ -17,7 +17,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package com.fabiani.domohome.app;//package client_java_core.core;
+package com.fabiani.domohome.app;
+//package client_java_core.core;
 
 
 /**
