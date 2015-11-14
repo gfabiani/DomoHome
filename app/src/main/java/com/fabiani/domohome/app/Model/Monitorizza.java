@@ -1,4 +1,4 @@
-package com.fabiani.domohome.app;
+package com.fabiani.domohome.app.model;
 
 /***************************************************************************
  * 			                 Monitorizza.java                              *
@@ -110,7 +110,7 @@ public class Monitorizza extends Thread{
 					break;
 				}
 
-				System.out.println("Mon: "+GestioneSocketMonitor.responseLineMon);
+				System.out.println("Mon: "+ GestioneSocketMonitor.responseLineMon);
 				risposta = null;
 
 			}while(GestioneSocketMonitor.statoMonitor == 3);

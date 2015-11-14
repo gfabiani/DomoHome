@@ -1,4 +1,4 @@
-package com.fabiani.domohome.app;
+package com.fabiani.domohome.app.model;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -6,6 +6,9 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+import com.fabiani.domohome.app.R;
+import com.fabiani.domohome.app.controller.SettingsFragment;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +21,9 @@ public class Dashboard {
 	private static final String JSON_FILENAME = "commands.json";
 	private static final int PORT = 20000;
 	private static Dashboard sDashboard;
-	static String sIp;
-	static int sPasswordOpen;
-	static GestioneSocketMonitor gestSocketMonitor;
+	public static String sIp;
+	public static int sPasswordOpen;
+	public static GestioneSocketMonitor gestSocketMonitor;
 	private Context mAppContext;
 	private JSONSerializer mJSONSerializer;
 	private ArrayList<Command> mCommands;
@@ -62,7 +65,7 @@ public class Dashboard {
 				activeNetwork.isConnected();
 	}
 
-	static void startMonitoring(Context c) {
+	public static void startMonitoring(Context c) {
 		if (!SettingsFragment.isIpValid)
 			Toast.makeText(c, R.string.connector_ip_error, Toast.LENGTH_SHORT).show();
 		if (!SettingsFragment.isPassordOpenValid)
@@ -78,7 +81,7 @@ public class Dashboard {
 		}
 	}
 
-	static void invia(Context c, String openwebnetString) {
+	public static void invia(Context c, String openwebnetString) {
 		try {
 			GestioneSocketComandi gestSocketComandi = new GestioneSocketComandi();
 			gestSocketComandi.connect(sIp, PORT, sPasswordOpen);

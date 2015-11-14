@@ -1,23 +1,29 @@
-package com.fabiani.domohome.app;
+package com.fabiani.domohome.app.controller;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.*;
+import android.preference.EditTextPreference;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.util.Patterns;
 import android.widget.Toast;
+import com.fabiani.domohome.app.R;
+import com.fabiani.domohome.app.model.Dashboard;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SettingsFragment extends PreferenceFragment {
 	static final String TAG = "SettingsFragment";
-	static final String IP_KEY="ip";
-	static final String PASSWORD_OPEN_KEY="passwordopen";
-	static final String EXTRA_IP_IS_VALID ="com.fabiani.domohome.app.extra_ip_is_valid";
-	static final String EXTRA_PASSWORD_OPEN_IS_VALID ="com.fabiani.domohome.app.extra_passord_open_is_valid";
-	static String sAddressInput;
-	static String sPasswordOpenInput;
-	static boolean isIpValid=false;
-	static boolean isPassordOpenValid=false;
+	public static final String IP_KEY="ip";
+	public static final String PASSWORD_OPEN_KEY="passwordopen";
+	public static final String EXTRA_IP_IS_VALID ="com.fabiani.domohome.app.extra_ip_is_valid";
+	public static final String EXTRA_PASSWORD_OPEN_IS_VALID ="com.fabiani.domohome.app.extra_passord_open_is_valid";
+	public static String sAddressInput;
+	public static String sPasswordOpenInput;
+	public static boolean isIpValid=false;
+	public static boolean isPassordOpenValid=false;
 	private EditTextPreference mPasswordOpenEditTextPreference;
 	private Pattern mIpPattern = Patterns.IP_ADDRESS;
 	private Matcher mIpMatcher;

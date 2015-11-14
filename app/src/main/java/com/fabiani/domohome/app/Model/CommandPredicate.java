@@ -1,4 +1,4 @@
-package com.fabiani.domohome.app;
+package com.fabiani.domohome.app.model;
 
 /**
  * Created by Giovanni on 26/05/2015.

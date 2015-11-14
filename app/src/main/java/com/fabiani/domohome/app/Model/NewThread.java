@@ -17,7 +17,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package com.fabiani.domohome.app;
+package com.fabiani.domohome.app.model;
 //package client_java_core.core;
 
 
@@ -36,7 +36,7 @@ public class NewThread extends Thread{
 
 	/**
 	 * Costruttore
-	 * 
+	 *
 	 * @param threadName Nome del Thread
 	 * @param numSocket Tipo di socket che richiama il costruttore, 0 se è socket comandi, 1 se è monitor
 	 */
@@ -47,14 +47,14 @@ public class NewThread extends Thread{
 		//else statoEntrata = GestioneSocketMonitor.statoMonitor;
 		System.out.println("Thread per il timeout attivato");
 	}
-	
+
 	/**
 	 * Avvia il Thread per gestire il timeout
 	 */
 	public void run(){
 		do{
 			time = 1000;
-			
+
 			try{
 				Thread.sleep(time);
 			}catch (InterruptedException e){
@@ -62,7 +62,7 @@ public class NewThread extends Thread{
 				break;
 				//e.printStackTrace();
 			}
-	
+
 			System.out.println("Thread timeout SCADUTO!");
 			//chiudo il thread per la ricezione dei caratteri
 			if(tipoSocket == 0){

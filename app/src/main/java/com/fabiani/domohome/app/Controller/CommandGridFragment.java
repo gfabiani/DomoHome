@@ -1,4 +1,4 @@
-package com.fabiani.domohome.app;
+package com.fabiani.domohome.app.controller;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -11,6 +11,10 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.*;
 import android.widget.*;
+import com.fabiani.domohome.app.R;
+import com.fabiani.domohome.app.model.Command;
+import com.fabiani.domohome.app.model.CommandPredicate;
+import com.fabiani.domohome.app.model.Dashboard;
 
 import java.util.ArrayList;
 

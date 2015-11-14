@@ -20,7 +20,9 @@
  *                                                                         *
  ***************************************************************************/
 
-package com.fabiani.domohome.app;
+package com.fabiani.domohome.app.model;
+
+import com.bticino.openwebnet.OpenWebNetUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,8 +31,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 //import bticino.GestionePassword;
-import com.bticino.openwebnet.OpenWebNetUtils;
-   
+
 /**
  * Description:
  * Gestione della socket Comandi, apertura connessione, chiusura connessione, invio comando

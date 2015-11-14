@@ -1,4 +1,4 @@
-package com.fabiani.domohome.app;
+package com.fabiani.domohome.app.model;
 
 /***************************************************************************
  * 			              GestioneSocketMonitor.java                       *
@@ -20,13 +20,13 @@ package com.fabiani.domohome.app;
  *                                                                         *
  ***************************************************************************/
 
+import com.bticino.openwebnet.OpenWebNetUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
-import com.bticino.openwebnet.OpenWebNetUtils;
 
 
 /**
@@ -47,7 +47,7 @@ public class GestioneSocketMonitor{
 
 	/**
 	 * Tentativo di apertura socket monitor verso il webserver
-	 * 
+	 *
 	 * @param ip Ip del webserver al quale connettersi
 	 * @param port porta sulla quale aprire la connessione
 	 * @param passwordOpen password open del webserver
@@ -57,7 +57,7 @@ public class GestioneSocketMonitor{
 		try {
 			System.out.println("Mon: Tentativo connessione a " + ip + "  Port: " + port);
 			socketMon = new Socket(ip, port);
-			setTimeout(1);		  	
+			setTimeout(1);
 			inputMon= new BufferedReader(new InputStreamReader(socketMon.getInputStream()));
 			System.out.println("Mon: Buffer reader creato");
 			outputMon = new PrintWriter(socketMon.getOutputStream(),true);
@@ -65,9 +65,9 @@ public class GestioneSocketMonitor{
 		}catch (IOException e){
 			System.out.println("Mon: Impossibile connettersi con host " + ip + "\n");
 			this.close();
-			//e.printStackTrace();	
+			//e.printStackTrace();
 		}
-		
+
 		if(socketMon != null){
 		    while(true){
 		    	readThMon = null;
@@ -80,7 +80,7 @@ public class GestioneSocketMonitor{
 					System.out.println("Mon: ----- ERRORE readThread.join() durante la connect:");
 					e1.printStackTrace();
 				}
-				
+
 				if(responseLineMon != null){
 		    		if (statoMonitor == 0 ){
 			        	System.out.println("\nMon: ----- STATO 0 ----- ");

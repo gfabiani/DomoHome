@@ -1,11 +1,11 @@
-package com.fabiani.domohome.app;
+package com.fabiani.domohome.app.controller;
 
 import android.app.Fragment;
 
 /**
  * Created by Giovanni on 26/12/2014.
  */
-public class CommandGridActivity extends SingleFragmentActivity{
+public class CommandGridActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment() {
         return new CommandGridFragment();

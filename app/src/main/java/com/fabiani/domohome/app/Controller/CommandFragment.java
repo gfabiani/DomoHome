@@ -1,4 +1,4 @@
-package com.fabiani.domohome.app;
+package com.fabiani.domohome.app.controller;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -12,6 +12,10 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import com.fabiani.domohome.app.R;
+import com.fabiani.domohome.app.model.Command;
+import com.fabiani.domohome.app.model.Dashboard;
+
 import java.util.UUID;
 
 
