@@ -24,11 +24,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="controller.CommandActivity"
-            android:parentActivityName="controller.CommandGridActivity"
+            android:name=".controller.CommandActivity"
+            android:parentActivityName=".controller.CommandGridActivity"
             android:label="@string/app_name"/>
         <activity 
-            android:name="controller.SettingsActivity"
+            android:name=".controller.SettingsActivity"
             android:parentActivityName=".controller.CommandGridActivity"
             android:label="@string/app_name"/>
     </application>
