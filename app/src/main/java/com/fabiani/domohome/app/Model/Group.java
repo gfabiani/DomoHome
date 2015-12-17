@@ -1,18 +1,21 @@
 package com.fabiani.domohome.app.model;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Giovanni on 12/11/2015.
  */
-public class Group {
-   // private static final String JSON_GROUP_TITLE = "group_title";
+public class Group implements Serializable{
+    private static final long serialVersionUID = 2L;
     private String mGroupTitle;
     private int mGroupSpinnerPosition;
     private UUID mId;
-    Group(UUID id){
-        mId=id;
+
+    public Group(){
+        mId=UUID.randomUUID();
     }
+
     public void setGroupTitle(String title) {
         mGroupTitle = title;
     }
@@ -27,5 +30,10 @@ public class Group {
 
     public void setGroupSpinnerPosition(int GroupSpinnerPosition) {
         mGroupSpinnerPosition = GroupSpinnerPosition;
+    }
+
+    @Override
+    public String toString(){
+        return mGroupTitle;
     }
 }

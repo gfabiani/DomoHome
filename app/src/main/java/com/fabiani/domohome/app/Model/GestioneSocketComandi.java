@@ -96,7 +96,6 @@ public class GestioneSocketComandi{
 				try{
 					readTh.join();
 				}catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
 					System.out.println("----- ERRORE readThread.join() durante la connect:");
 					e1.printStackTrace();
 				}
@@ -173,8 +172,7 @@ public class GestioneSocketComandi{
 				socket = null;
 				stato = 0;
 				System.out.println("-----Socket chiusa correttamente-----");				
-			} catch (IOException e) {				
-				// TODO Auto-generated catch block
+			} catch (IOException e) {
 				System.out.println("Errore Socket: <GestioneSocketComandi>");
 				e.printStackTrace();
 			}
@@ -215,7 +213,7 @@ public class GestioneSocketComandi{
 			try{
 				readTh.join();
 			}catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
+
 				System.out.println("----- ERRORE readThread.join() durante l'invio comando:");
 				e1.printStackTrace();
 			}

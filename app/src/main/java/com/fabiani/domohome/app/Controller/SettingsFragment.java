@@ -35,26 +35,23 @@ public class SettingsFragment extends PreferenceFragment {
 		isIpValid = getArguments().getBoolean(EXTRA_IP_IS_VALID);
 		isPassordOpenValid=getArguments().getBoolean(EXTRA_PASSWORD_OPEN_IS_VALID);
 		EditTextPreference mIpEditTextPreference = (EditTextPreference) findPreference("IP_KEY");
-		mIpEditTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				sAddressInput = newValue.toString();
-				Dashboard.sIp = sAddressInput;
-				SharedPreferences.Editor editor = PreferenceManager.
-						getDefaultSharedPreferences(getActivity()).edit();
-				editor.putString(IP_KEY, sAddressInput);
-				editor.apply();
-				if (isIpValid())
-					isIpValid = true;
-				else {
-					Toast.makeText(getActivity(), R.string.connector_ip_error, Toast.LENGTH_SHORT).show();
-					isIpValid = false;
-				}
-				editor.putBoolean(EXTRA_IP_IS_VALID, isIpValid);
-				editor.apply();
-				return true;
-			}
-		});
+		mIpEditTextPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            sAddressInput = newValue.toString();
+            Dashboard.sIp = sAddressInput;
+            SharedPreferences.Editor editor = PreferenceManager.
+                    getDefaultSharedPreferences(getActivity()).edit();
+            editor.putString(IP_KEY, sAddressInput);
+            editor.apply();
+            if (isIpValid())
+                isIpValid = true;
+            else {
+                Toast.makeText(getActivity(), R.string.connector_ip_error, Toast.LENGTH_SHORT).show();
+                isIpValid = false;
+            }
+            editor.putBoolean(EXTRA_IP_IS_VALID, isIpValid);
+            editor.apply();
+            return true;
+        });
 		mIpEditTextPreference.setText(Dashboard.sIp);
 
 		mPasswordOpenEditTextPreference = (EditTextPreference) findPreference("PASSWORD_OPEN_KEY");

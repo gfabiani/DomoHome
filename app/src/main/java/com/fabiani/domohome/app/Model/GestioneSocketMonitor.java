@@ -76,7 +76,7 @@ public class GestioneSocketMonitor{
 				try{
 					readThMon.join();
 				}catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
+
 					System.out.println("Mon: ----- ERRORE readThread.join() durante la connect:");
 					e1.printStackTrace();
 				}
@@ -162,7 +162,7 @@ public class GestioneSocketMonitor{
 				statoMonitor = 0;
 				System.out.println("MON: Socket monitor chiusa correttamente-----\n");				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+
 				System.out.println("MON: Errore chiusura Socket: <GestioneSocketMonitor>");
 				e.printStackTrace();
 			}

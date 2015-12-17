@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,9 @@ import android.widget.Spinner;
 import com.fabiani.domohome.app.R;
 import com.fabiani.domohome.app.model.Command;
 import com.fabiani.domohome.app.model.Dashboard;
+import com.fabiani.domohome.app.model.Group;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 
@@ -29,33 +32,37 @@ public class CommandFragment extends Fragment {
 		private EditText mCommandTitleEditText;
 		private Command mCommand;
 
+
 		@Override
 		public void onCreate(Bundle savedInstanceState){
 			super.onCreate(savedInstanceState);
 			mCommand=new Command();
 			UUID commandId=(UUID)getArguments().getSerializable(EXTRA_COMMAND_ID);
 			mCommand= Dashboard.get(getActivity()).getCommand(commandId);
+
 		}
 			
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
 			View v=inflater.inflate(R.layout.fragment_command, parent, false);
 			mCommandTitleEditText=(EditText)v.findViewById(R.id.command_title_edit_text);
-			mCommandTitleEditText.setText(mCommand.getCommandTitle());
+			mCommandTitleEditText.setText(mCommand.getTitle());
 			mCommandTitleEditText.addTextChangedListener(new TextWatcher(){
 
 				@Override
 				public void beforeTextChanged(CharSequence s, int start, int count,
 						int after) {}
-				
+
 				@Override
 				public void onTextChanged(CharSequence s, int start, int before,
 						int count) {
-					mCommand.setCommandTitle(s.toString());
+
+						mCommand.setTitle(s.toString());
 				}
-				
+
 				@Override
 				public void afterTextChanged(Editable s) {}
+
 			});
 			mWhoSpinner=(Spinner)v.findViewById(R.id.command_who_spinner);
 			ArrayAdapter<CharSequence>mWhoAdapter=ArrayAdapter
@@ -149,7 +156,7 @@ public class CommandFragment extends Fragment {
 			
 			return v;
 		}
-		
+
 		public static CommandFragment newInstance(UUID commandId){
 			Bundle args=new Bundle();
 			args.putSerializable(EXTRA_COMMAND_ID,commandId);

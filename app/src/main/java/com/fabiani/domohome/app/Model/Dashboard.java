@@ -6,38 +6,47 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+import com.annimon.stream.Stream;
 import com.fabiani.domohome.app.R;
 import com.fabiani.domohome.app.controller.SettingsFragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 //singleton class
 
 public class Dashboard {
 	private static final String TAG = "Dashboard";
-	private static final String JSON_FILENAME = "commands.json";
+	private static final String COMMANDS_FILENAME = "commands.ser";
+	private static final String GROUPS_FILENAME = "groups.ser";
 	private static final int PORT = 20000;
 	private static Dashboard sDashboard;
 	public static String sIp;
 	public static int sPasswordOpen;
 	public static GestioneSocketMonitor gestSocketMonitor;
 	private Context mAppContext;
-	private JSONSerializer mJSONSerializer;
+	private Serializer mSerializer;
 	private ArrayList<Command> mCommands;
+	private ArrayList<Group> mGroups;
 
 	private Dashboard(Context appContext) {
 		mAppContext = appContext;
-		mJSONSerializer = new JSONSerializer(mAppContext, JSON_FILENAME);
+		mSerializer = new Serializer(mAppContext);
 		//commands loading....
 		try {
-			mCommands = mJSONSerializer.loadCommands();
+			mCommands = mSerializer.loadArrayList(COMMANDS_FILENAME);
 			Log.i(TAG, "Commands loaded  ");
+			Log.i(TAG, "mCommands.size()   "+mCommands.size());
+			mGroups=mSerializer.loadArrayList(GROUPS_FILENAME);
+			Log.i(TAG, "Groups loaded  ");
+			Log.i(TAG, "mGroups.size()   "+mGroups.size());
 		} catch (Exception e) {
 			mCommands = new ArrayList<>();
 			Log.i(TAG, "commands not  loaded  ");
+			mGroups=new ArrayList<>();
+			Log.i(TAG, "groups not loaded");
+
 		}
 		//Preferences loading....
 		sIp = PreferenceManager.getDefaultSharedPreferences(mAppContext)
@@ -96,16 +105,12 @@ public class Dashboard {
 		}
 	}
 
-	public static ArrayList<Command> filter(List<Command> commands, CommandPredicate p) {
-		ArrayList<Command> result = new ArrayList<>();
-		for (Command c : commands)
-			if (p.test(c))
-				result.add(c);
-		return result;
-	}
-
 	public ArrayList<Command> getCommands() {
 		return mCommands;
+	}
+
+	public ArrayList<Group>getGroups(){
+		return mGroups;
 	}
 
 	public Command getCommand(UUID id) {
@@ -126,12 +131,27 @@ public class Dashboard {
 
 	public void saveCommands() {
 		try {
-			mJSONSerializer.saveCommands(mCommands);
+			mSerializer.saveArrayList(mCommands,COMMANDS_FILENAME);
 			Log.i(TAG, "Commands saved");
 		} catch (Exception e) {
 			Log.i(TAG, "Error saving commands");
 		}
 	}
+	public void addGroup(Group g){
+		mGroups.add(g);
 
+	}
+
+	public void saveGroups() {
+		try {
+			mSerializer.saveArrayList(mGroups,GROUPS_FILENAME);
+			Log.i(TAG, "Groups saved");
+		} catch (Exception e) {
+			Log.i(TAG, "Error saving groups");
+		}
+	}
+	public void deleteGroup(Group g){
+		mGroups.remove(g);
+	}
 }
 
