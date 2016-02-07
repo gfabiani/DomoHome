@@ -6,10 +6,8 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
-import com.annimon.stream.Stream;
 import com.fabiani.domohome.app.R;
 import com.fabiani.domohome.app.controller.SettingsFragment;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -18,35 +16,26 @@ import java.util.UUID;
 
 public class Dashboard {
 	private static final String TAG = "Dashboard";
-	private static final String COMMANDS_FILENAME = "commands.ser";
-	private static final String GROUPS_FILENAME = "groups.ser";
+	private static final String JSON_FILENAME = "commands.json";
 	private static final int PORT = 20000;
 	private static Dashboard sDashboard;
 	public static String sIp;
 	public static int sPasswordOpen;
 	public static GestioneSocketMonitor gestSocketMonitor;
 	private Context mAppContext;
-	private Serializer mSerializer;
+	private JSONSerializer mJSONSerializer;
 	private ArrayList<Command> mCommands;
-	private ArrayList<Group> mGroups;
 
 	private Dashboard(Context appContext) {
 		mAppContext = appContext;
-		mSerializer = new Serializer(mAppContext);
+		mJSONSerializer = new JSONSerializer(mAppContext, JSON_FILENAME);
 		//commands loading....
 		try {
-			mCommands = mSerializer.loadArrayList(COMMANDS_FILENAME);
+			mCommands = mJSONSerializer.loadCommands();
 			Log.i(TAG, "Commands loaded  ");
-			Log.i(TAG, "mCommands.size()   "+mCommands.size());
-			mGroups=mSerializer.loadArrayList(GROUPS_FILENAME);
-			Log.i(TAG, "Groups loaded  ");
-			Log.i(TAG, "mGroups.size()   "+mGroups.size());
 		} catch (Exception e) {
 			mCommands = new ArrayList<>();
 			Log.i(TAG, "commands not  loaded  ");
-			mGroups=new ArrayList<>();
-			Log.i(TAG, "groups not loaded");
-
 		}
 		//Preferences loading....
 		sIp = PreferenceManager.getDefaultSharedPreferences(mAppContext)
@@ -109,10 +98,6 @@ public class Dashboard {
 		return mCommands;
 	}
 
-	public ArrayList<Group>getGroups(){
-		return mGroups;
-	}
-
 	public Command getCommand(UUID id) {
 		for (Command c : mCommands) {
 			if (c.getId().equals(id))
@@ -131,27 +116,11 @@ public class Dashboard {
 
 	public void saveCommands() {
 		try {
-			mSerializer.saveArrayList(mCommands,COMMANDS_FILENAME);
+			mJSONSerializer.saveCommands(mCommands);
 			Log.i(TAG, "Commands saved");
 		} catch (Exception e) {
 			Log.i(TAG, "Error saving commands");
 		}
-	}
-	public void addGroup(Group g){
-		mGroups.add(g);
-
-	}
-
-	public void saveGroups() {
-		try {
-			mSerializer.saveArrayList(mGroups,GROUPS_FILENAME);
-			Log.i(TAG, "Groups saved");
-		} catch (Exception e) {
-			Log.i(TAG, "Error saving groups");
-		}
-	}
-	public void deleteGroup(Group g){
-		mGroups.remove(g);
 	}
 }
 

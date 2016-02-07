@@ -10,7 +10,6 @@ import android.util.Patterns;
 import android.widget.Toast;
 import com.fabiani.domohome.app.R;
 import com.fabiani.domohome.app.model.Dashboard;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,26 +54,23 @@ public class SettingsFragment extends PreferenceFragment {
 		mIpEditTextPreference.setText(Dashboard.sIp);
 
 		mPasswordOpenEditTextPreference = (EditTextPreference) findPreference("PASSWORD_OPEN_KEY");
-		final SharedPreferences.Editor editor = PreferenceManager.
-				getDefaultSharedPreferences(getActivity()).edit();
-		mPasswordOpenEditTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				sPasswordOpenInput = newValue.toString();
-				try {
-					Dashboard.sPasswordOpen = Integer.parseInt(sPasswordOpenInput);
-					editor.putInt(PASSWORD_OPEN_KEY, Integer.parseInt(sPasswordOpenInput));
-					isPassordOpenValid = true;
-				} catch (NumberFormatException e) {
-					isPassordOpenValid = false;
-					Toast.makeText(getActivity(), R.string.commandgridgragment_valid_password, Toast.LENGTH_SHORT).show();
-				}finally {
-					editor.putBoolean(EXTRA_PASSWORD_OPEN_IS_VALID,isPassordOpenValid);
-					editor.apply();
-				}
-				return true;
-			}
-		});
+		mPasswordOpenEditTextPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+			final SharedPreferences.Editor editor = PreferenceManager.
+					getDefaultSharedPreferences(getActivity()).edit();
+            sPasswordOpenInput = newValue.toString();
+            try {
+                Dashboard.sPasswordOpen = Integer.parseInt(sPasswordOpenInput);
+                editor.putInt(PASSWORD_OPEN_KEY, Integer.parseInt(sPasswordOpenInput));
+                isPassordOpenValid = true;
+            } catch (NumberFormatException e) {
+                isPassordOpenValid = false;
+                Toast.makeText(SettingsFragment.this.getActivity(), R.string.commandgridgragment_valid_password, Toast.LENGTH_SHORT).show();
+            } finally {
+                editor.putBoolean(EXTRA_PASSWORD_OPEN_IS_VALID, isPassordOpenValid);
+                editor.apply();
+            }
+            return true;
+        });
 		if (Dashboard.sPasswordOpen == 0)
 			mPasswordOpenEditTextPreference.setText("");
 		 else

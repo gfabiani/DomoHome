@@ -11,4 +11,12 @@
             android:stretchMode="columnWidth"
             android:numColumns="3"
             android:gravity="center_vertical"/>
+    <ImageButton
+            android:id="@+id/add_button"
+            android:layout_width="@dimen/add_button_diameter"
+            android:layout_height="@dimen/add_button_diameter"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="@dimen/add_button_margin"
+            android:layout_marginEnd="@dimen/add_button_margin"
+            android:src="@android:drawable/ic_input_add"/>
 </FrameLayout>

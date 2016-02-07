@@ -9,7 +9,6 @@ import android.graphics.Outline;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import com.annimon.stream.Collectors;
@@ -17,29 +16,29 @@ import com.annimon.stream.Stream;
 import com.fabiani.domohome.app.R;
 import com.fabiani.domohome.app.model.Command;
 import com.fabiani.domohome.app.model.Dashboard;
-import com.fabiani.domohome.app.model.Group;
-import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by Giovanni on 26/12/2014.
  */
 public class CommandGridFragment extends Fragment {
     static final String TAG = "CommandGridFragment";
+    private Toolbar mToolbar;
     private ToggleButton mItemToggleButton;
-    private ArrayList<Command> mCommands;
+    private List<Command> mCommands;
     private List<Command> mAutomatismCommands;
     private List<Command>mLightingCommands;
     private GridView mGridView;
     private Command mCommand;
     private CommandAdapter mCommandAdapter;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        getActivity().setTitle(R.string.app_name);
         mCommands = Dashboard.get(getActivity()).getCommands();
         Dashboard.startMonitoring(getActivity());
     }
@@ -47,17 +46,19 @@ public class CommandGridFragment extends Fragment {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View v = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        View v=null;
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP)
             v = inflater.inflate(R.layout.fragment_grid, parent, false);
         else
-            super.onCreateView(inflater, parent, savedInstanceState);
+            super.onCreateView(inflater,parent,savedInstanceState);
+        /*mToolBar=(Toolbar)v.findViewById(R.id.tool_bar);
+        getActivity().setActionBar(mToolBar);*/
         mGridView = (GridView) v.findViewById(R.id.gridView);
         setHasOptionsMenu(true);
         registerForContextMenu(mGridView);
         setupActionBar();
         mLightingCommands=Stream.of(mCommands)
-                .filter(c->c.getWho()==1)
+                .filter(c->c.getWho()==Command.WhoChoice.LIGHTING.getValue())
                 .collect(Collectors.toList());
         setupAdapter(mLightingCommands);
         View addCommandButton = v.findViewById(R.id.add_button);
@@ -65,7 +66,7 @@ public class CommandGridFragment extends Fragment {
         addCommandButton.setOutlineProvider(new ViewOutlineProvider() {
             @Override
             public void getOutline(View view, Outline outline) {
-                int diameter = getActivity().getResources().getDimensionPixelSize(R.dimen.round_button_diameter);
+                int diameter = getActivity().getResources().getDimensionPixelSize(R.dimen.add_button_diameter);
                 outline.setOval(0, 0, diameter, diameter);
             }
         });
@@ -73,7 +74,7 @@ public class CommandGridFragment extends Fragment {
         return v;
     }
 
-    void setupAdapter(List<Command> commands) {
+    public void setupAdapter(List<Command> commands) {
         if (mCommands != null) {
             mCommandAdapter = new CommandAdapter(commands);
             mGridView.setAdapter(mCommandAdapter);
@@ -81,7 +82,7 @@ public class CommandGridFragment extends Fragment {
         else mGridView.setAdapter(null);
     }
 
-    @SuppressWarnings("deprecation")
+
     void setupActionBar() {
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -91,7 +92,7 @@ public class CommandGridFragment extends Fragment {
             @Override
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
                 mLightingCommands = Stream.of(mCommands)
-                        .filter(command->command.getWho()==1)
+                        .filter(command->command.getWho()==Command.WhoChoice.LIGHTING.getValue())
                         .collect(Collectors.toList());
                 setupAdapter(mLightingCommands);
             }
@@ -110,7 +111,7 @@ public class CommandGridFragment extends Fragment {
             @Override
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
                 mAutomatismCommands = Stream.of(mCommands)
-                        .filter(command->command.getWho()==2)
+                        .filter(command->command.getWho()==Command.WhoChoice.AUTOMATISM.getValue())
                         .collect(Collectors.toList());
                 setupAdapter(mAutomatismCommands);
             }
@@ -151,22 +152,15 @@ public class CommandGridFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_item_new_command:
-                newCommandSelected();
-                break;
-            case R.id.menu_item_new_group:
-                newGroupSelected();
-                break;
             case R.id.menu_item_settings:
                 Intent i = new Intent(getActivity(), SettingsActivity.class);
                 startActivity(i);
                 break;
         }
         return true;
-
     }
 
-    @Override
+   @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         getActivity().getMenuInflater().inflate(R.menu.fragment_grid_context_menu, menu);
     }
@@ -184,16 +178,15 @@ public class CommandGridFragment extends Fragment {
                 break;
             case R.id.menu_item_delete_command:
                 Dashboard.get(getActivity()).deleteCommand(mCommand);
-                if(mCommand.getWho()==1)
+                if(mCommand.getWho()==Command.WhoChoice.LIGHTING.getValue())
                     mLightingCommands.remove(mCommand);
-                else if (mCommand.getWho()==2)
+                else if (mCommand.getWho()==Command.WhoChoice.AUTOMATISM.getValue())
                     mAutomatismCommands.remove(mCommand);
                 mCommandAdapter.notifyDataSetChanged();
                 break;
         }
         return true;
     }
-
 
     public class CommandAdapter extends ArrayAdapter<Command> {
         public CommandAdapter(List<Command> commands) {
@@ -231,24 +224,11 @@ public class CommandGridFragment extends Fragment {
         i.putExtra(CommandFragment.EXTRA_COMMAND_ID, command.getId());
         startActivity(i);
     }
-    public void newGroupSelected(){
-        Group group=new Group();
-        Dashboard.get(getActivity()).addGroup(group);
-        GroupDialogFragment groupDialogFragment=new GroupDialogFragment();
-        groupDialogFragment.show(getFragmentManager(),null);
-    }
 
     @Override
     public void onStop() {
         super.onStop();
         Dashboard.get(getActivity()).saveCommands();
-        Dashboard.get(getActivity()).saveGroups();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mCommandAdapter.notifyDataSetChanged();
     }
 
     @Override
