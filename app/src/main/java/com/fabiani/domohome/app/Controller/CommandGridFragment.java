@@ -6,17 +6,24 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Outline;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.design.widget.TabLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.*;
 import android.view.*;
 import android.widget.*;
+import android.widget.Toolbar;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.fabiani.domohome.app.R;
 import com.fabiani.domohome.app.model.Command;
 import com.fabiani.domohome.app.model.Dashboard;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 
 /**
@@ -24,11 +31,14 @@ import java.util.List;
  */
 public class CommandGridFragment extends Fragment {
     static final String TAG = "CommandGridFragment";
-    private Toolbar mToolbar;
+    private static final int LIGHTING_TAB_SELECTED=0;
+    private static final int AUTOMATISM_TAB_SELECTED=1;
+    private static final int ALL_TAB_SELECTED=2;
     private ToggleButton mItemToggleButton;
     private List<Command> mCommands;
+    private android.support.v7.widget.Toolbar mToolbar;
     private List<Command> mAutomatismCommands;
-    private List<Command>mLightingCommands;
+    private List<Command> mLightingCommands;
     private GridView mGridView;
     private Command mCommand;
     private CommandAdapter mCommandAdapter;
@@ -40,27 +50,66 @@ public class CommandGridFragment extends Fragment {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         mCommands = Dashboard.get(getActivity()).getCommands();
-        Dashboard.startMonitoring(getActivity());
+        getActivity().runOnUiThread(()->{
+            Dashboard.startMonitoring(getActivity());
+        });
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View v=null;
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP)
+        View v = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             v = inflater.inflate(R.layout.fragment_grid, parent, false);
         else
-            super.onCreateView(inflater,parent,savedInstanceState);
-        /*mToolBar=(Toolbar)v.findViewById(R.id.tool_bar);
-        getActivity().setActionBar(mToolBar);*/
+            super.onCreateView(inflater, parent, savedInstanceState);
+        mToolbar= (android.support.v7.widget.Toolbar) v.findViewById(R.id.tool_bar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         mGridView = (GridView) v.findViewById(R.id.gridView);
         setHasOptionsMenu(true);
         registerForContextMenu(mGridView);
-        setupActionBar();
-        mLightingCommands=Stream.of(mCommands)
-                .filter(c->c.getWho()==Command.WhoChoice.LIGHTING.getValue())
+        mLightingCommands = Stream.of(mCommands)
+                .filter(c -> c.getWho() == Command.WhoChoice.LIGHTING.getValue())
                 .collect(Collectors.toList());
         setupAdapter(mLightingCommands);
+        TabLayout tabs=(TabLayout)v.findViewById(R.id.tabs);
+        TabLayout.Tab tabLighting= tabs.newTab().setText(Command.WhoChoice.LIGHTING.toString());
+        TabLayout.Tab tabAutomatism=tabs.newTab().setText(Command.WhoChoice.AUTOMATISM.toString());
+        TabLayout.Tab tabAll=tabs.newTab().setText(R.string.commandgridfragment_all_commands);
+        tabs.addTab(tabLighting);
+        tabs.addTab(tabAutomatism);
+        tabs.addTab(tabAll);
+        tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case LIGHTING_TAB_SELECTED:
+                        mLightingCommands = Stream.of(mCommands)
+                                .filter(command -> command.getWho() == Command.WhoChoice.LIGHTING.getValue())
+                                .collect(Collectors.toList());
+                        setupAdapter(mLightingCommands);
+                        break;
+                    case AUTOMATISM_TAB_SELECTED:
+                        mAutomatismCommands = Stream.of(mCommands)
+                                .filter(command -> command.getWho() == Command.WhoChoice.AUTOMATISM.getValue())
+                                .collect(Collectors.toList());
+                        setupAdapter(mAutomatismCommands);
+                        break;
+                    case ALL_TAB_SELECTED:
+                        setupAdapter(mCommands);
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
         View addCommandButton = v.findViewById(R.id.add_button);
         addCommandButton.setOnClickListener(view -> newCommandSelected());
         addCommandButton.setOutlineProvider(new ViewOutlineProvider() {
@@ -78,70 +127,10 @@ public class CommandGridFragment extends Fragment {
         if (mCommands != null) {
             mCommandAdapter = new CommandAdapter(commands);
             mGridView.setAdapter(mCommandAdapter);
-        }
-        else mGridView.setAdapter(null);
+        } else mGridView.setAdapter(null);
     }
 
 
-    void setupActionBar() {
-        ActionBar actionBar = getActivity().getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setDisplayShowTitleEnabled(false);
-        ActionBar.Tab tabLighting = actionBar.newTab().setText(Command.WhoChoice.LIGHTING.toString());
-        tabLighting.setTabListener(new ActionBar.TabListener() {
-            @Override
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                mLightingCommands = Stream.of(mCommands)
-                        .filter(command->command.getWho()==Command.WhoChoice.LIGHTING.getValue())
-                        .collect(Collectors.toList());
-                setupAdapter(mLightingCommands);
-            }
-
-            @Override
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-            }
-
-            @Override
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-            }
-        });
-        actionBar.addTab(tabLighting);
-        ActionBar.Tab tabAutomatism = actionBar.newTab().setText((Command.WhoChoice.AUTOMATISM.toString()));
-        tabAutomatism.setTabListener(new ActionBar.TabListener() {
-            @Override
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                mAutomatismCommands = Stream.of(mCommands)
-                        .filter(command->command.getWho()==Command.WhoChoice.AUTOMATISM.getValue())
-                        .collect(Collectors.toList());
-                setupAdapter(mAutomatismCommands);
-            }
-
-            @Override
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-            }
-
-            @Override
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-            }
-        });
-        actionBar.addTab(tabAutomatism);
-        ActionBar.Tab tabAll = actionBar.newTab().setText(R.string.commandgridfragment_all_commands);
-        tabAll.setTabListener(new ActionBar.TabListener() {
-            @Override
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                setupAdapter(mCommands);
-            }
-
-            @Override
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-            }
-
-            @Override
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-            }
-        });
-        actionBar.addTab(tabAll);
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -160,7 +149,7 @@ public class CommandGridFragment extends Fragment {
         return true;
     }
 
-   @Override
+    @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         getActivity().getMenuInflater().inflate(R.menu.fragment_grid_context_menu, menu);
     }
@@ -178,9 +167,9 @@ public class CommandGridFragment extends Fragment {
                 break;
             case R.id.menu_item_delete_command:
                 Dashboard.get(getActivity()).deleteCommand(mCommand);
-                if(mCommand.getWho()==Command.WhoChoice.LIGHTING.getValue())
+                if (mCommand.getWho() == Command.WhoChoice.LIGHTING.getValue())
                     mLightingCommands.remove(mCommand);
-                else if (mCommand.getWho()==Command.WhoChoice.AUTOMATISM.getValue())
+                else if (mCommand.getWho() == Command.WhoChoice.AUTOMATISM.getValue())
                     mAutomatismCommands.remove(mCommand);
                 mCommandAdapter.notifyDataSetChanged();
                 break;
@@ -207,7 +196,10 @@ public class CommandGridFragment extends Fragment {
                 if (!Dashboard.isNetworkActiveConnected(getActivity()))
                     Toast.makeText(getActivity(), R.string.commandgridfragment_network_inactive, Toast.LENGTH_LONG).show();
                 else
-                    Dashboard.invia(getActivity(), "*" + mCommand.getWho() + "*" + mCommand.getWhat() + "*" + mCommand.getWhere() + "##");
+                    new Thread(() -> {
+                        Dashboard.invia(getActivity(), "*" + mCommand.getWho() + "*" + mCommand.getWhat() + "*" + mCommand.getWhere() + "##");
+                    }).start();
+
             });
             mItemToggleButton.setOnLongClickListener(v -> {
                 getActivity().openContextMenu(v);
@@ -238,3 +230,4 @@ public class CommandGridFragment extends Fragment {
             Dashboard.gestSocketMonitor.close();
     }
 }
+

@@ -20,6 +20,8 @@ package com.fabiani.domohome.app.model;
  *                                                                         *
  ***************************************************************************/
 
+import android.content.Context;
+import android.widget.Toast;
 import com.bticino.openwebnet.OpenWebNetUtils;
 
 import java.io.BufferedReader;
@@ -27,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Observable;
 
 
 /**
@@ -34,13 +37,13 @@ import java.net.Socket;
  * Gestione della socket Monitor, apertura monitor, chiusura monitor
  * 
  */
-public class GestioneSocketMonitor{
+public class GestioneSocketMonitor {
 	static final String socketMonitor = "*99*1##";
 	static ReadThread readThMon = null; //thread per la ricezione dei caratteri inviati dal webserver
 	static NewThread timeoutThreadMon = null; //thread per la gestione dei timeout
 	static int  statoMonitor = 0;  //stato socket monitor
-	static Socket socketMon = null;
-	static String responseLineMon = null; //stringa in ricezione dal Webserver
+	public static Socket socketMon = null;
+	public static String responseLineMon = null; //stringa in ricezione dal Webserver
 	BufferedReader inputMon = null;
 	PrintWriter outputMon = null;
 	Monitorizza monThread = null;
@@ -57,7 +60,6 @@ public class GestioneSocketMonitor{
 		try {
 			System.out.println("Mon: Tentativo connessione a " + ip + "  Port: " + port);
 			socketMon = new Socket(ip, port);
-			setTimeout(1);
 			inputMon= new BufferedReader(new InputStreamReader(socketMon.getInputStream()));
 			System.out.println("Mon: Buffer reader creato");
 			outputMon = new PrintWriter(socketMon.getOutputStream(),true);
@@ -65,7 +67,6 @@ public class GestioneSocketMonitor{
 		}catch (IOException e){
 			System.out.println("Mon: Impossibile connettersi con host " + ip + "\n");
 			this.close();
-			//e.printStackTrace();
 		}
 
 		if(socketMon != null){

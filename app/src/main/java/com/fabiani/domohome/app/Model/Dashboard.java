@@ -8,13 +8,15 @@ import android.util.Log;
 import android.widget.Toast;
 import com.fabiani.domohome.app.R;
 import com.fabiani.domohome.app.controller.SettingsFragment;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 //singleton class
 
-public class Dashboard {
+public class Dashboard  {
 	private static final String TAG = "Dashboard";
 	private static final String JSON_FILENAME = "commands.json";
 	private static final int PORT = 20000;
@@ -24,7 +26,7 @@ public class Dashboard {
 	public static GestioneSocketMonitor gestSocketMonitor;
 	private Context mAppContext;
 	private JSONSerializer mJSONSerializer;
-	private ArrayList<Command> mCommands;
+	private List<Command> mCommands;
 
 	private Dashboard(Context appContext) {
 		mAppContext = appContext;
@@ -69,32 +71,20 @@ public class Dashboard {
 		if (!SettingsFragment.isPassordOpenValid)
 			Toast.makeText(c, R.string.commandgridgragment_valid_password, Toast.LENGTH_SHORT).show();
 		else {
-			try {
-				gestSocketMonitor = new GestioneSocketMonitor(); // improve exception handling
+			gestSocketMonitor = new GestioneSocketMonitor(); // improve exception handling
 				gestSocketMonitor.connect(sIp, PORT, sPasswordOpen);
-			} catch (Exception e) {
-				Toast.makeText(c, R.string.host_unricheable, Toast.LENGTH_LONG).show();
-				gestSocketMonitor.close();
 			}
 		}
-	}
+
 
 	public static void invia(Context c, String openwebnetString) {
-		try {
 			GestioneSocketComandi gestSocketComandi = new GestioneSocketComandi();
 			gestSocketComandi.connect(sIp, PORT, sPasswordOpen);
 			gestSocketComandi.invia(openwebnetString);
 			gestSocketComandi.close();
-		} catch (Exception e) {
-			try {
-				throw new IOException();
-			} catch (IOException e1) {
-				Toast.makeText(c, R.string.host_unricheable, Toast.LENGTH_LONG).show();
-			}
-		}
 	}
 
-	public ArrayList<Command> getCommands() {
+	public List<Command> getCommands() {
 		return mCommands;
 	}
 
@@ -116,7 +106,7 @@ public class Dashboard {
 
 	public void saveCommands() {
 		try {
-			mJSONSerializer.saveCommands(mCommands);
+			mJSONSerializer.saveCommands((ArrayList<Command>) mCommands);
 			Log.i(TAG, "Commands saved");
 		} catch (Exception e) {
 			Log.i(TAG, "Error saving commands");

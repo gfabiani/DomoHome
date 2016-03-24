@@ -2,8 +2,10 @@ package com.fabiani.domohome.app.controller;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.*;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,9 +27,8 @@ public class CommandFragment extends Fragment {
 	private Spinner mWhoSpinner;
 	private Spinner mWhereSpinner;
 	private EditText mCommandTitleEditText;
+	private Toolbar mToolbar;
 	private Command mCommand;
-	private String strTitle;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,6 +40,9 @@ public class CommandFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_command, parent, false);
+		mToolbar= (Toolbar) v.findViewById(R.id.tool_bar);
+		((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+		((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		mCommandTitleEditText = (EditText) v.findViewById(R.id.command_title_edit_text);
 		mCommandTitleEditText.setText(mCommand.getTitle());
 		mCommandTitleEditText.addTextChangedListener(new TextWatcher() {

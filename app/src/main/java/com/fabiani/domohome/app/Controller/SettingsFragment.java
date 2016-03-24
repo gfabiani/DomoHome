@@ -3,10 +3,12 @@ package com.fabiani.domohome.app.controller;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
-import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Patterns;
+import android.view.ViewGroup;
 import android.widget.Toast;
 import com.fabiani.domohome.app.R;
 import com.fabiani.domohome.app.model.Dashboard;
@@ -26,10 +28,15 @@ public class SettingsFragment extends PreferenceFragment {
 	private EditTextPreference mPasswordOpenEditTextPreference;
 	private Pattern mIpPattern = Patterns.IP_ADDRESS;
 	private Matcher mIpMatcher;
+	private Toolbar mTolbar;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getActivity().getLayoutInflater().inflate(R.layout.app_bar, (ViewGroup)getActivity().findViewById(android.R.id.content));
+		mTolbar= (Toolbar)getActivity().findViewById(R.id.tool_bar);
+		((AppCompatActivity) getActivity()).setSupportActionBar(mTolbar);
+		((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		addPreferencesFromResource(R.xml.preferences);
 		isIpValid = getArguments().getBoolean(EXTRA_IP_IS_VALID);
 		isPassordOpenValid=getArguments().getBoolean(EXTRA_PASSWORD_OPEN_IS_VALID);
@@ -40,7 +47,6 @@ public class SettingsFragment extends PreferenceFragment {
             SharedPreferences.Editor editor = PreferenceManager.
                     getDefaultSharedPreferences(getActivity()).edit();
             editor.putString(IP_KEY, sAddressInput);
-            editor.apply();
             if (isIpValid())
                 isIpValid = true;
             else {

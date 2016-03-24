@@ -26,10 +26,6 @@
     <string name="commandgridfragment_network_inactive">Network connection inactive </string>
 	<string name="password_open_invalid">Password open invalid</string>
 	<string name="commandgridgragment_valid_password">Enter password</string>
-	<string name="settingsfragment_password_checkbox">Show password open</string>
-	<string name="group_label">Group name</string>
-	<string name="group_title_hint">Enter a name for this group</string>
-	<string name="group_dialog_fragment_new_group">New Group</string>
 	<string-array name="who_array">
 	    <item>Scenarios</item>
 	    <item>Lighting</item>
@@ -49,11 +45,4 @@
 	    <item>Thermoregulation diagnostics</item>
 	    <item>Device diagnostics</item>
 	</string-array>
-    <string name="title_activity_psger">PsgerActivity</string>
-
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
