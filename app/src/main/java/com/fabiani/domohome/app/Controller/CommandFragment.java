@@ -42,6 +42,7 @@ public class CommandFragment extends Fragment {
 		View v = inflater.inflate(R.layout.fragment_command, parent, false);
 		mToolbar= (Toolbar) v.findViewById(R.id.tool_bar);
 		((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+		//noinspection ConstantConditions
 		((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		mCommandTitleEditText = (EditText) v.findViewById(R.id.command_title_edit_text);
 		mCommandTitleEditText.setText(mCommand.getTitle());
