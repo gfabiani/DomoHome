@@ -36,6 +36,7 @@ public class SettingsFragment extends PreferenceFragment {
 		getActivity().getLayoutInflater().inflate(R.layout.app_bar, (ViewGroup)getActivity().findViewById(android.R.id.content));
 		mTolbar= (Toolbar)getActivity().findViewById(R.id.tool_bar);
 		((AppCompatActivity) getActivity()).setSupportActionBar(mTolbar);
+		//noinspection ConstantConditions
 		((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		addPreferencesFromResource(R.xml.preferences);
 		isIpValid = getArguments().getBoolean(EXTRA_IP_IS_VALID);
@@ -70,7 +71,7 @@ public class SettingsFragment extends PreferenceFragment {
                 isPassordOpenValid = true;
             } catch (NumberFormatException e) {
                 isPassordOpenValid = false;
-                Toast.makeText(SettingsFragment.this.getActivity(), R.string.commandgridgragment_valid_password, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.commandgridgragment_valid_password, Toast.LENGTH_SHORT).show();
             } finally {
                 editor.putBoolean(EXTRA_PASSWORD_OPEN_IS_VALID, isPassordOpenValid);
                 editor.apply();

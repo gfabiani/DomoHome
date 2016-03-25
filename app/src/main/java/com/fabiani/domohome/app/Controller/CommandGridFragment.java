@@ -1,29 +1,23 @@
 package com.fabiani.domohome.app.controller;
 
 import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Outline;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.*;
+import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.*;
-import android.widget.Toolbar;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.fabiani.domohome.app.R;
 import com.fabiani.domohome.app.model.Command;
 import com.fabiani.domohome.app.model.Dashboard;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 
 /**
@@ -36,13 +30,12 @@ public class CommandGridFragment extends Fragment {
     private static final int ALL_TAB_SELECTED=2;
     private ToggleButton mItemToggleButton;
     private List<Command> mCommands;
-    private android.support.v7.widget.Toolbar mToolbar;
     private List<Command> mAutomatismCommands;
     private List<Command> mLightingCommands;
     private GridView mGridView;
     private Command mCommand;
     private CommandAdapter mCommandAdapter;
-
+    private Toolbar mToolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +56,7 @@ public class CommandGridFragment extends Fragment {
             v = inflater.inflate(R.layout.fragment_grid, parent, false);
         else
             super.onCreateView(inflater, parent, savedInstanceState);
-        mToolbar= (android.support.v7.widget.Toolbar) v.findViewById(R.id.tool_bar);
+        mToolbar= (Toolbar) v.findViewById(R.id.tool_bar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         mGridView = (GridView) v.findViewById(R.id.gridView);
         setHasOptionsMenu(true);
