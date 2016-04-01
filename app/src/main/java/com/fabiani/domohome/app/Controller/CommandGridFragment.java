@@ -4,12 +4,11 @@ import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Outline;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.StrictMode;
+import android.os.*;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import com.annimon.stream.Collectors;
@@ -43,10 +42,17 @@ public class CommandGridFragment extends Fragment {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         mCommands = Dashboard.get(getActivity()).getCommands();
-        getActivity().runOnUiThread(()->{
-            Dashboard.startMonitoring(getActivity());
-        });
+        if (!Dashboard.isNetworkActiveConnected(getActivity()))
+            Toast.makeText(getActivity(), R.string.commandgridfragment_network_inactive, Toast.LENGTH_LONG).show();
+        if (!SettingsFragment.isIpValid)
+            Toast.makeText(getActivity(), R.string.connector_ip_error, Toast.LENGTH_SHORT).show();
+        if (!SettingsFragment.isPassordOpenValid)
+            Toast.makeText(getActivity(), R.string.commandgridgragment_valid_password, Toast.LENGTH_SHORT).show();
+        else {
+                new Thread(Dashboard::startMonitoring).start();
+        }
     }
+
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -66,7 +72,7 @@ public class CommandGridFragment extends Fragment {
                 .collect(Collectors.toList());
         setupAdapter(mLightingCommands);
         TabLayout tabs=(TabLayout)v.findViewById(R.id.tabs);
-        TabLayout.Tab tabLighting= tabs.newTab().setText(Command.WhoChoice.LIGHTING.toString());
+        TabLayout.Tab tabLighting=tabs.newTab().setText(Command.WhoChoice.LIGHTING.toString());
         TabLayout.Tab tabAutomatism=tabs.newTab().setText(Command.WhoChoice.AUTOMATISM.toString());
         TabLayout.Tab tabAll=tabs.newTab().setText(R.string.commandgridfragment_all_commands);
         tabs.addTab(tabLighting);
@@ -186,11 +192,8 @@ public class CommandGridFragment extends Fragment {
             mItemToggleButton.setTextOn(mCommand.getTitle());
             mItemToggleButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 mCommand.setWhat(isChecked ? 1 : 0);
-                if (!Dashboard.isNetworkActiveConnected(getActivity()))
-                    Toast.makeText(getActivity(), R.string.commandgridfragment_network_inactive, Toast.LENGTH_LONG).show();
-                else
                     new Thread(() -> {
-                        Dashboard.invia(getActivity(), "*" + mCommand.getWho() + "*" + mCommand.getWhat() + "*" + mCommand.getWhere() + "##");
+                        Dashboard.invia("*" + mCommand.getWho() + "*" + mCommand.getWhat() + "*" + mCommand.getWhere() + "##");
                     }).start();
 
             });
@@ -223,4 +226,9 @@ public class CommandGridFragment extends Fragment {
             Dashboard.gestSocketMonitor.close();
     }
 }
+
+
+
+
+
 

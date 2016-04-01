@@ -22,5 +22,4 @@
         <item name="actionMenuTextColor">@color/colorSecondary</item>
         <item name="android:actionMenuTextColor">@color/colorSecondary</item>
     </style>
-
 </resources>
