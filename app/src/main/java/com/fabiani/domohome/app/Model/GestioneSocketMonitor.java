@@ -20,8 +20,6 @@ package com.fabiani.domohome.app.model;
  *                                                                         *
  ***************************************************************************/
 
-import android.content.Context;
-import android.widget.Toast;
 import com.bticino.openwebnet.OpenWebNetUtils;
 
 import java.io.BufferedReader;
@@ -29,7 +27,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Observable;
+import java.net.SocketException;
 
 
 /**
@@ -47,6 +45,7 @@ public class GestioneSocketMonitor {
 	BufferedReader inputMon = null;
 	PrintWriter outputMon = null;
 	Monitorizza monThread = null;
+	//private Observer mObserver;
 
 	/**
 	 * Tentativo di apertura socket monitor verso il webserver
@@ -66,6 +65,7 @@ public class GestioneSocketMonitor {
 			System.out.println("Mon: Print Writer creato");
 		}catch (IOException e){
 			System.out.println("Mon: Impossibile connettersi con host " + ip + "\n");
+			//mObserver = (Observer) e;
 			this.close();
 		}
 
@@ -181,6 +181,9 @@ public class GestioneSocketMonitor {
 		timeoutThreadMon = new NewThread("timeout",tipoSocket);
 		timeoutThreadMon.start();
 	}
+	/*public interface Observer {
+		void update(SocketException socketexception);
+	}*/
 }
 
 
