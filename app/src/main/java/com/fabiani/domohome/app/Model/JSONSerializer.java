@@ -33,10 +33,10 @@ public class JSONSerializer {
 
     public ArrayList<Command> loadCommands() throws JSONException {
         ArrayList<Command> commands = new ArrayList<>();
+        String line;
         try (InputStream in = mContext.openFileInput(mSerializeFileName);
              BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             StringBuilder jsonString = new StringBuilder();
-            String line = null;
             while ((line = reader.readLine()) != null) {
                 jsonString.append(line);
             }

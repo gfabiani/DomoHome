@@ -4,11 +4,12 @@ import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Outline;
-import android.os.*;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import com.annimon.stream.Collectors;
@@ -18,11 +19,10 @@ import com.fabiani.domohome.app.model.Command;
 import com.fabiani.domohome.app.model.Dashboard;
 import java.util.List;
 
-
 /**
  * Created by Giovanni on 26/12/2014.
  */
-public class CommandGridFragment extends Fragment {
+public class CommandGridFragment extends Fragment  {
     static final String TAG = "CommandGridFragment";
     private static final int LIGHTING_TAB_SELECTED=0;
     private static final int AUTOMATISM_TAB_SELECTED=1;
@@ -48,10 +48,9 @@ public class CommandGridFragment extends Fragment {
             Toast.makeText(getActivity(), R.string.connector_ip_error, Toast.LENGTH_SHORT).show();
         if (!SettingsFragment.isPassordOpenValid)
             Toast.makeText(getActivity(), R.string.commandgridgragment_valid_password, Toast.LENGTH_SHORT).show();
-        else {
-                new Thread(Dashboard::startMonitoring).start();
+        else
+            new Thread(Dashboard::startMonitoring).start();
         }
-    }
 
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -67,9 +66,7 @@ public class CommandGridFragment extends Fragment {
         mGridView = (GridView) v.findViewById(R.id.gridView);
         setHasOptionsMenu(true);
         registerForContextMenu(mGridView);
-        mLightingCommands = Stream.of(mCommands)
-                .filter(c -> c.getWho() == Command.WhoChoice.LIGHTING.getValue())
-                .collect(Collectors.toList());
+        mLightingCommands = Stream.of(mCommands).filter(c -> c.getWho() == Command.WhoChoice.LIGHTING.getValue()).collect(Collectors.toList());
         setupAdapter(mLightingCommands);
         TabLayout tabs=(TabLayout)v.findViewById(R.id.tabs);
         TabLayout.Tab tabLighting=tabs.newTab().setText(Command.WhoChoice.LIGHTING.toString());

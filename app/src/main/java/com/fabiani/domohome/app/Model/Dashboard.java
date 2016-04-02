@@ -5,11 +5,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
-import com.fabiani.domohome.app.R;
+import com.annimon.stream.Stream;
 import com.fabiani.domohome.app.controller.SettingsFragment;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -23,7 +20,7 @@ public class Dashboard  {
 	private static Dashboard sDashboard;
 	public static String sIp;
 	public static int sPasswordOpen;
-	public static GestioneSocketMonitor gestSocketMonitor;
+	public  static GestioneSocketMonitor gestSocketMonitor;
 	private Context mAppContext;
 	private JSONSerializer mJSONSerializer;
 	private List<Command> mCommands;
@@ -43,7 +40,7 @@ public class Dashboard  {
 		sIp = PreferenceManager.getDefaultSharedPreferences(mAppContext)
 				.getString(SettingsFragment.IP_KEY, SettingsFragment.sAddressInput);
 		sPasswordOpen = PreferenceManager.getDefaultSharedPreferences(mAppContext)
-				.getInt(SettingsFragment.PASSWORD_OPEN_KEY, 0);//check
+				.getInt(SettingsFragment.PASSWORD_OPEN_KEY, 0);
 		SettingsFragment.isIpValid = PreferenceManager.getDefaultSharedPreferences(mAppContext)
 				.getBoolean(SettingsFragment.EXTRA_IP_IS_VALID, SettingsFragment.isIpValid);
 		SettingsFragment.isPassordOpenValid = PreferenceManager.getDefaultSharedPreferences(mAppContext)
@@ -56,7 +53,6 @@ public class Dashboard  {
 		return sDashboard;
 	}
 
-
 	public static boolean isNetworkActiveConnected(Context c) {
 		ConnectivityManager cm =
 				(ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -65,19 +61,12 @@ public class Dashboard  {
 				activeNetwork.isConnected();
 	}
 
-	public static void startMonitoring(Context c) {
-		if (!SettingsFragment.isIpValid)
-			Toast.makeText(c, R.string.connector_ip_error, Toast.LENGTH_SHORT).show();
-		if (!SettingsFragment.isPassordOpenValid)
-			Toast.makeText(c, R.string.commandgridgragment_valid_password, Toast.LENGTH_SHORT).show();
-		else {
-			gestSocketMonitor = new GestioneSocketMonitor(); // improve exception handling
-				gestSocketMonitor.connect(sIp, PORT, sPasswordOpen);
-			}
+	public static void startMonitoring() {
+			GestioneSocketMonitor gestSocketMonitor = new GestioneSocketMonitor(); // improve exception handling
+			gestSocketMonitor.connect(sIp, PORT, sPasswordOpen);
 		}
 
-
-	public static void invia(Context c, String openwebnetString) {
+	public static void invia(String openwebnetString) {
 			GestioneSocketComandi gestSocketComandi = new GestioneSocketComandi();
 			gestSocketComandi.connect(sIp, PORT, sPasswordOpen);
 			gestSocketComandi.invia(openwebnetString);
@@ -89,11 +78,7 @@ public class Dashboard  {
 	}
 
 	public Command getCommand(UUID id) {
-		for (Command c : mCommands) {
-			if (c.getId().equals(id))
-				return c;
-		}
-		return null;
+		return Stream.of(mCommands).filter(command->command.getId().equals(id)).findFirst().get();
 	}
 
 	public void addCommand(Command c) {

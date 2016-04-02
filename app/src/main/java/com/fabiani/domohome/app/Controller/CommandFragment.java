@@ -61,8 +61,6 @@ public class CommandFragment extends Fragment {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-
-
 			}
 		});
 		mWhoSpinner = (Spinner) v.findViewById(R.id.command_who_spinner);

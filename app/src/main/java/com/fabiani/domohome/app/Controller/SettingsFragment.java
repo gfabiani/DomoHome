@@ -26,8 +26,8 @@ public class SettingsFragment extends PreferenceFragment {
 	public static boolean isIpValid=false;
 	public static boolean isPassordOpenValid=false;
 	private EditTextPreference mPasswordOpenEditTextPreference;
-	private Pattern mIpPattern = Patterns.IP_ADDRESS;
-	private Matcher mIpMatcher;
+	private static Pattern mIpPattern = Patterns.IP_ADDRESS;
+	private static  Matcher mIpMatcher;
 	private Toolbar mTolbar;
 	
 	@Override
@@ -84,9 +84,9 @@ public class SettingsFragment extends PreferenceFragment {
 			mPasswordOpenEditTextPreference.setText(Integer.toString(Dashboard.sPasswordOpen));
 	}
 
-	public  boolean isIpValid() {
+	public   boolean isIpValid() {
 		mIpMatcher = mIpPattern.matcher(sAddressInput);
-        return mIpMatcher.matches() ? true : false;
+        return mIpMatcher.matches();
 	}
 
 	public static SettingsFragment newInstance(){

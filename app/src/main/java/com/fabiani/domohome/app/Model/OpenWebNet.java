@@ -28,7 +28,7 @@ package com.fabiani.domohome.app.model;//package client_java_core.core;
 public class OpenWebNet implements InterfaceOpenWebNet {
 	
 //	rappresenta la frame open creata
-	private String frameOpen = new String();
+	private String frameOpen;
 //	tipo di frame open
 	private int tipoFrame;
 //	lunghezza frame
