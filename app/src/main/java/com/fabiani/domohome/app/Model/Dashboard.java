@@ -5,7 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import com.annimon.stream.Stream;
+import com.annimon.stream.Stream;;
 import com.fabiani.domohome.app.controller.SettingsFragment;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,12 +62,12 @@ public class Dashboard  {
 	}
 
 	public static void startMonitoring() {
-			GestioneSocketMonitor gestSocketMonitor = new GestioneSocketMonitor(); // improve exception handling
+			gestSocketMonitor = new GestioneSocketMonitor(); //TODO: improve exception handling on Dashboard.statMonitoring()
 			gestSocketMonitor.connect(sIp, PORT, sPasswordOpen);
 		}
 
 	public static void invia(String openwebnetString) {
-			GestioneSocketComandi gestSocketComandi = new GestioneSocketComandi();
+		GestioneSocketComandi gestSocketComandi = new GestioneSocketComandi();
 			gestSocketComandi.connect(sIp, PORT, sPasswordOpen);
 			gestSocketComandi.invia(openwebnetString);
 			gestSocketComandi.close();
