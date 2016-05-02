@@ -28,14 +28,14 @@ public class SettingsFragment extends PreferenceFragment {
 	private EditTextPreference mPasswordOpenEditTextPreference;
 	private static Pattern mIpPattern = Patterns.IP_ADDRESS;
 	private static  Matcher mIpMatcher;
-	private Toolbar mTolbar;
+	private Toolbar mToolbar;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getActivity().getLayoutInflater().inflate(R.layout.app_bar, (ViewGroup)getActivity().findViewById(android.R.id.content));
-		mTolbar= (Toolbar)getActivity().findViewById(R.id.tool_bar);
-		((AppCompatActivity) getActivity()).setSupportActionBar(mTolbar);
+		mToolbar = (Toolbar)getActivity().findViewById(R.id.tool_bar);
+		((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
 		//noinspection ConstantConditions
 		((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		addPreferencesFromResource(R.xml.preferences);
@@ -48,7 +48,7 @@ public class SettingsFragment extends PreferenceFragment {
             SharedPreferences.Editor editor = PreferenceManager.
                     getDefaultSharedPreferences(getActivity()).edit();
             editor.putString(IP_KEY, sAddressInput);
-            if (isIpValid())
+            if (validateIp())
                 isIpValid = true;
             else {
                 Toast.makeText(getActivity(), R.string.connector_ip_error, Toast.LENGTH_SHORT).show();
@@ -84,7 +84,7 @@ public class SettingsFragment extends PreferenceFragment {
 			mPasswordOpenEditTextPreference.setText(Integer.toString(Dashboard.sPasswordOpen));
 	}
 
-	public   boolean isIpValid() {
+	public  static boolean validateIp() {
 		mIpMatcher = mIpPattern.matcher(sAddressInput);
         return mIpMatcher.matches();
 	}

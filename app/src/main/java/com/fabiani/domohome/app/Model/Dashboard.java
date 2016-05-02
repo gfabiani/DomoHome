@@ -5,7 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import com.annimon.stream.Stream;;
+import com.annimon.stream.Stream;
 import com.fabiani.domohome.app.controller.SettingsFragment;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,16 +16,15 @@ import java.util.UUID;
 public class Dashboard  {
 	private static final String TAG = "Dashboard";
 	private static final String JSON_FILENAME = "commands.json";
-	private static final int PORT = 20000;
+	public  static final int PORT = 20000;
 	private static Dashboard sDashboard;
 	public static String sIp;
 	public static int sPasswordOpen;
-	public  static GestioneSocketMonitor gestSocketMonitor;
 	private Context mAppContext;
 	private JSONSerializer mJSONSerializer;
 	private List<Command> mCommands;
 
-	private Dashboard(Context appContext) {
+	public Dashboard(Context appContext) {
 		mAppContext = appContext;
 		mJSONSerializer = new JSONSerializer(mAppContext, JSON_FILENAME);
 		//commands loading....
@@ -61,17 +60,7 @@ public class Dashboard  {
 				activeNetwork.isConnected();
 	}
 
-	public static void startMonitoring() {
-			gestSocketMonitor = new GestioneSocketMonitor(); //TODO: improve exception handling on Dashboard.statMonitoring()
-			gestSocketMonitor.connect(sIp, PORT, sPasswordOpen);
-		}
 
-	public static void invia(String openwebnetString) {
-		GestioneSocketComandi gestSocketComandi = new GestioneSocketComandi();
-			gestSocketComandi.connect(sIp, PORT, sPasswordOpen);
-			gestSocketComandi.invia(openwebnetString);
-			gestSocketComandi.close();
-	}
 
 	public List<Command> getCommands() {
 		return mCommands;
