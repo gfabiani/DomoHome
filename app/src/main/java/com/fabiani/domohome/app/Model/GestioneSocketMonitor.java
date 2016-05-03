@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Observable;
 
 
 /**
@@ -34,7 +35,7 @@ import java.net.Socket;
  * Gestione della socket Monitor, apertura monitor, chiusura monitor
  * 
  */
-public class GestioneSocketMonitor {
+public class GestioneSocketMonitor extends Observable {
 	static final String socketMonitor = "*99*1##";
 	static ReadThread readThMon = null; //thread per la ricezione dei caratteri inviati dal webserver
 	static NewThread timeoutThreadMon = null; //thread per la gestione dei timeout
@@ -44,7 +45,6 @@ public class GestioneSocketMonitor {
 	BufferedReader inputMon = null;
 	PrintWriter outputMon = null;
 	Monitorizza monThread = null;
-	//private Observer mObserver;
 
 	/**
 	 * Tentativo di apertura socket monitor verso il webserver
@@ -63,8 +63,9 @@ public class GestioneSocketMonitor {
 			outputMon = new PrintWriter(socketMon.getOutputStream(),true);
 			System.out.println("Mon: Print Writer creato");
 		}catch (IOException e){
+			setChanged();
+			notifyObservers(e);
 			System.out.println("Mon: Impossibile connettersi con host " + ip + "\n");
-			//mObserver = (Observer) e;
 			this.close();
 		}
 

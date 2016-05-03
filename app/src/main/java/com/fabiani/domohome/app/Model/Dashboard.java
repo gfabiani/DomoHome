@@ -60,8 +60,6 @@ public class Dashboard  {
 				activeNetwork.isConnected();
 	}
 
-
-
 	public List<Command> getCommands() {
 		return mCommands;
 	}

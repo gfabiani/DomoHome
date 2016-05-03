@@ -10,37 +10,53 @@ import android.os.StrictMode;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.*;
-import android.widget.*;
+import android.view.ContextMenu;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.GridView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.fabiani.domohome.app.R;
 import com.fabiani.domohome.app.model.Command;
 import com.fabiani.domohome.app.model.Dashboard;
+import com.fabiani.domohome.app.model.GestioneSocketComandi;
+import com.fabiani.domohome.app.model.GestioneSocketMonitor;
 import java.util.List;
 
 /**
  * Created by Giovanni on 26/12/2014.
  */
-public class CommandGridFragment extends Fragment  {
+public class CommandGridFragment extends Fragment {
     static final String TAG = "CommandGridFragment";
     private static final int LIGHTING_TAB_SELECTED=0;
     private static final int AUTOMATISM_TAB_SELECTED=1;
     private static final int ALL_TAB_SELECTED=2;
-    private ToggleButton mItemToggleButton;
     private List<Command> mCommands;
     private List<Command> mAutomatismCommands;
     private List<Command> mLightingCommands;
     private GridView mGridView;
     private Command mCommand;
     private CommandAdapter mCommandAdapter;
-    private Toolbar mToolbar;
+    private GestioneSocketMonitor gestioneSocketMonitor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+        gestioneSocketMonitor=new GestioneSocketMonitor();
+        gestioneSocketMonitor.addObserver((observable, o) -> {getActivity().runOnUiThread(() ->
+                Toast.makeText(getActivity(),"Exception caught:"+o.toString(),Toast.LENGTH_LONG).show());//TO DO: IMPROVE MESSAGE
+        });
         mCommands = Dashboard.get(getActivity()).getCommands();
         if (!Dashboard.isNetworkActiveConnected(getActivity()))
             Toast.makeText(getActivity(), R.string.commandgridfragment_network_inactive, Toast.LENGTH_LONG).show();
@@ -49,9 +65,10 @@ public class CommandGridFragment extends Fragment  {
         if (!SettingsFragment.isPassordOpenValid)
             Toast.makeText(getActivity(), R.string.commandgridgragment_valid_password, Toast.LENGTH_SHORT).show();
         else
-            new Thread(Dashboard::startMonitoring).start();
-        }
-
+            new Thread(()->{
+               gestioneSocketMonitor.connect(Dashboard.sIp,Dashboard.PORT,Dashboard.sPasswordOpen);
+            }).start();
+    }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -61,7 +78,8 @@ public class CommandGridFragment extends Fragment  {
             v = inflater.inflate(R.layout.fragment_grid, parent, false);
         else
             super.onCreateView(inflater, parent, savedInstanceState);
-        mToolbar= (Toolbar) v.findViewById(R.id.tool_bar);
+        //noinspection ConstantConditions
+        Toolbar mToolbar = (Toolbar) v.findViewById(R.id.tool_bar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         mGridView = (GridView) v.findViewById(R.id.gridView);
         setHasOptionsMenu(true);
@@ -126,8 +144,6 @@ public class CommandGridFragment extends Fragment  {
         } else mGridView.setAdapter(null);
     }
 
-
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -182,7 +198,7 @@ public class CommandGridFragment extends Fragment  {
         public View getView(final int position, View convertView, ViewGroup parent) {
             if (convertView == null)
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.fragment_grid_item, parent, false);
-            mItemToggleButton = (ToggleButton) convertView.findViewById(R.id.command_grid_item_toggleButton);
+            ToggleButton mItemToggleButton = (ToggleButton) convertView.findViewById(R.id.command_grid_item_toggleButton);
             mCommand = getItem(position);
             mItemToggleButton.setText(mCommand.getTitle());
             mItemToggleButton.setTextOff(mCommand.getTitle());
@@ -190,7 +206,7 @@ public class CommandGridFragment extends Fragment  {
             mItemToggleButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 mCommand.setWhat(isChecked ? 1 : 0);
                     new Thread(() -> {
-                        Dashboard.invia("*" + mCommand.getWho() + "*" + mCommand.getWhat() + "*" + mCommand.getWhere() + "##");
+                        inviaSelected("*" + mCommand.getWho() + "*" + mCommand.getWhat() + "*" + mCommand.getWhere() + "##");
                     }).start();
 
             });
@@ -209,6 +225,12 @@ public class CommandGridFragment extends Fragment  {
         i.putExtra(CommandFragment.EXTRA_COMMAND_ID, command.getId());
         startActivity(i);
     }
+    public void inviaSelected(String openwebnetString) {
+        GestioneSocketComandi gestioneSocketComandi = new GestioneSocketComandi();
+        gestioneSocketComandi.connect(Dashboard.sIp, Dashboard.PORT, Dashboard.sPasswordOpen);
+        gestioneSocketComandi.invia(openwebnetString);
+        gestioneSocketComandi.close();
+    }
 
     @Override
     public void onStop() {
@@ -219,8 +241,10 @@ public class CommandGridFragment extends Fragment  {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (Dashboard.gestSocketMonitor != null)
-            Dashboard.gestSocketMonitor.close();
+        if (gestioneSocketMonitor != null)
+            gestioneSocketMonitor.close();
+        //noinspection ConstantConditions
+        gestioneSocketMonitor.deleteObservers();
     }
 }
 
