@@ -40,11 +40,13 @@ public class GestioneSocketMonitor extends Observable {
 	static ReadThread readThMon = null; //thread per la ricezione dei caratteri inviati dal webserver
 	static NewThread timeoutThreadMon = null; //thread per la gestione dei timeout
 	static int  statoMonitor = 0;  //stato socket monitor
+	static boolean isIOExceptionCaught =false;
 	public static Socket socketMon = null;
 	public static String responseLineMon = null; //stringa in ricezione dal Webserver
 	BufferedReader inputMon = null;
 	PrintWriter outputMon = null;
 	Monitorizza monThread = null;
+
 
 	/**
 	 * Tentativo di apertura socket monitor verso il webserver
@@ -63,8 +65,9 @@ public class GestioneSocketMonitor extends Observable {
 			outputMon = new PrintWriter(socketMon.getOutputStream(),true);
 			System.out.println("Mon: Print Writer creato");
 		}catch (IOException e){
+			isIOExceptionCaught=true;
 			setChanged();
-			notifyObservers(e);
+			notifyObservers(isIOExceptionCaught);
 			System.out.println("Mon: Impossibile connettersi con host " + ip + "\n");
 			this.close();
 		}

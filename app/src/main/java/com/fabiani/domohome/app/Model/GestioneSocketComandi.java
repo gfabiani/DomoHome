@@ -249,7 +249,7 @@ public class GestioneSocketComandi{
 	    		//break;
 	    	}
 		}while(true); 
-	}//chiude metodo inviaSelected(...)
+	}//chiude metodo inviaCommand(...)
 		
 	
 	/**

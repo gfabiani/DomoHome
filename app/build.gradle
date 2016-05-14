@@ -43,5 +43,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
     // Required -- JUnit 4 framework
-    androidTestCompile 'junit:junit:4.12'
+   // androidTestCompile 'junit:junit:4.12'
 }
