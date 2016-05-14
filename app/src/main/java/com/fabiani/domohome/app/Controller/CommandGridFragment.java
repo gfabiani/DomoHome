@@ -46,18 +46,19 @@ public class CommandGridFragment extends Fragment {
     private GridView mGridView;
     private Command mCommand;
     private CommandAdapter mCommandAdapter;
-    private GestioneSocketMonitor gestioneSocketMonitor;
+    private GestioneSocketMonitor mGestioneSocketMonitor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        gestioneSocketMonitor=new GestioneSocketMonitor();
-        gestioneSocketMonitor.addObserver((observable, o) -> {getActivity().runOnUiThread(() ->
-                Toast.makeText(getActivity(),"Exception caught:"+o.toString(),Toast.LENGTH_LONG).show());//TO DO: IMPROVE MESSAGE
-        });
         mCommands = Dashboard.get(getActivity()).getCommands();
+        mGestioneSocketMonitor =new GestioneSocketMonitor();
+            mGestioneSocketMonitor.addObserver((observable, o) -> {
+                if((Boolean)o)
+                    getActivity().runOnUiThread(()->Toast.makeText(getActivity(),R.string.host_unricheable,Toast.LENGTH_LONG).show());
+            });
         if (!Dashboard.isNetworkActiveConnected(getActivity()))
             Toast.makeText(getActivity(), R.string.commandgridfragment_network_inactive, Toast.LENGTH_LONG).show();
         if (!SettingsFragment.isIpValid)
@@ -66,7 +67,7 @@ public class CommandGridFragment extends Fragment {
             Toast.makeText(getActivity(), R.string.commandgridgragment_valid_password, Toast.LENGTH_SHORT).show();
         else
             new Thread(()->{
-               gestioneSocketMonitor.connect(Dashboard.sIp,Dashboard.PORT,Dashboard.sPasswordOpen);
+               mGestioneSocketMonitor.connect(Dashboard.sIp,Dashboard.PORT,Dashboard.sPasswordOpen);
             }).start();
     }
 
@@ -206,7 +207,7 @@ public class CommandGridFragment extends Fragment {
             mItemToggleButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 mCommand.setWhat(isChecked ? 1 : 0);
                     new Thread(() -> {
-                        inviaSelected("*" + mCommand.getWho() + "*" + mCommand.getWhat() + "*" + mCommand.getWhere() + "##");
+                        inviaCommand("*" + mCommand.getWho() + "*" + mCommand.getWhat() + "*" + mCommand.getWhere() + "##");
                     }).start();
 
             });
@@ -225,8 +226,8 @@ public class CommandGridFragment extends Fragment {
         i.putExtra(CommandFragment.EXTRA_COMMAND_ID, command.getId());
         startActivity(i);
     }
-    public void inviaSelected(String openwebnetString) {
-        GestioneSocketComandi gestioneSocketComandi = new GestioneSocketComandi();
+    public void inviaCommand(String openwebnetString) {
+        GestioneSocketComandi gestioneSocketComandi= new GestioneSocketComandi();
         gestioneSocketComandi.connect(Dashboard.sIp, Dashboard.PORT, Dashboard.sPasswordOpen);
         gestioneSocketComandi.invia(openwebnetString);
         gestioneSocketComandi.close();
@@ -241,15 +242,9 @@ public class CommandGridFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (gestioneSocketMonitor != null)
-            gestioneSocketMonitor.close();
+        if (mGestioneSocketMonitor != null)
+            mGestioneSocketMonitor.close();
         //noinspection ConstantConditions
-        gestioneSocketMonitor.deleteObservers();
+        mGestioneSocketMonitor.deleteObservers();
     }
 }
-
-
-
-
-
-
