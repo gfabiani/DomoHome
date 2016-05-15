@@ -40,7 +40,7 @@ public class GestioneSocketMonitor extends Observable {
 	static ReadThread readThMon = null; //thread per la ricezione dei caratteri inviati dal webserver
 	static NewThread timeoutThreadMon = null; //thread per la gestione dei timeout
 	static int  statoMonitor = 0;  //stato socket monitor
-	static boolean isIOExceptionCaught =false;
+	static boolean isIOExceptionCaught = false;
 	public static Socket socketMon = null;
 	public static String responseLineMon = null; //stringa in ricezione dal Webserver
 	BufferedReader inputMon = null;
@@ -138,8 +138,6 @@ public class GestioneSocketMonitor extends Observable {
 		    		break;//ramo else della funzione riceviStringa()
 		    	}
 		    }//chiude while(true)
-		}else{
-			//System.out.println("$$$$$$$");
 		}
 		
 		if(statoMonitor == 3){

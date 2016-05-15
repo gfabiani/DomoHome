@@ -55,9 +55,9 @@ public class CommandGridFragment extends Fragment {
         StrictMode.setThreadPolicy(policy);
         mCommands = Dashboard.get(getActivity()).getCommands();
         mGestioneSocketMonitor =new GestioneSocketMonitor();
-            mGestioneSocketMonitor.addObserver((observable, o) -> {
-                if((Boolean)o)
-                    getActivity().runOnUiThread(()->Toast.makeText(getActivity(),R.string.host_unricheable,Toast.LENGTH_LONG).show());
+            mGestioneSocketMonitor.addObserver((observable, object) -> {
+                if((Boolean)object)
+                    getActivity().runOnUiThread(()->Toast.makeText(getActivity(),R.string.host_unricheable+Dashboard.sIp,Toast.LENGTH_LONG).show());
             });
         if (!Dashboard.isNetworkActiveConnected(getActivity()))
             Toast.makeText(getActivity(), R.string.commandgridfragment_network_inactive, Toast.LENGTH_LONG).show();
