@@ -51,6 +51,12 @@ public class Dashboard  {
 			sDashboard = new Dashboard(c.getApplicationContext());
 		return sDashboard;
 	}
+	public static  void inviaCommand(String openwebnetString) {
+		GestioneSocketComandi gestioneSocketComandi= new GestioneSocketComandi();
+		gestioneSocketComandi.connect(sIp, PORT, sPasswordOpen);
+		gestioneSocketComandi.invia(openwebnetString);
+		gestioneSocketComandi.close();
+	}
 
 	public static boolean isNetworkActiveConnected(Context c) {
 		ConnectivityManager cm =

@@ -7,6 +7,7 @@ import android.graphics.Outline;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -55,9 +56,9 @@ public class CommandGridFragment extends Fragment {
         StrictMode.setThreadPolicy(policy);
         mCommands = Dashboard.get(getActivity()).getCommands();
         mGestioneSocketMonitor =new GestioneSocketMonitor();
-            mGestioneSocketMonitor.addObserver((observable, object) -> {
+        mGestioneSocketMonitor.addObserver((observable, object) -> {
                 if((Boolean)object)
-                    getActivity().runOnUiThread(()->Toast.makeText(getActivity(),R.string.host_unricheable+Dashboard.sIp,Toast.LENGTH_LONG).show());
+                    getActivity().runOnUiThread(()->Toast.makeText(getActivity(),R.string.host_unricheable,Toast.LENGTH_LONG).show());
             });
         if (!Dashboard.isNetworkActiveConnected(getActivity()))
             Toast.makeText(getActivity(), R.string.commandgridfragment_network_inactive, Toast.LENGTH_LONG).show();
@@ -85,7 +86,9 @@ public class CommandGridFragment extends Fragment {
         mGridView = (GridView) v.findViewById(R.id.gridView);
         setHasOptionsMenu(true);
         registerForContextMenu(mGridView);
-        mLightingCommands = Stream.of(mCommands).filter(c -> c.getWho() == Command.WhoChoice.LIGHTING.getValue()).collect(Collectors.toList());
+        mLightingCommands = Stream.of(mCommands)
+                .filter(command -> command.getWho() == Command.WhoChoice.LIGHTING.getValue())
+                .collect(Collectors.toList());
         setupAdapter(mLightingCommands);
         TabLayout tabs=(TabLayout)v.findViewById(R.id.tabs);
         TabLayout.Tab tabLighting=tabs.newTab().setText(Command.WhoChoice.LIGHTING.toString());
@@ -125,16 +128,8 @@ public class CommandGridFragment extends Fragment {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-        View addCommandButton = v.findViewById(R.id.add_button);
-        addCommandButton.setOnClickListener(view -> newCommandSelected());
-        addCommandButton.setOutlineProvider(new ViewOutlineProvider() {
-            @Override
-            public void getOutline(View view, Outline outline) {
-                int diameter = getActivity().getResources().getDimensionPixelSize(R.dimen.add_button_diameter);
-                outline.setOval(0, 0, diameter, diameter);
-            }
-        });
-        addCommandButton.setClipToOutline(true);
+        FloatingActionButton addCommandButton = (FloatingActionButton)v.findViewById(R.id.add_button);
+        addCommandButton.setOnClickListener(fab -> newCommandSelected());
         return v;
     }
 
@@ -142,7 +137,8 @@ public class CommandGridFragment extends Fragment {
         if (mCommands != null) {
             mCommandAdapter = new CommandAdapter(commands);
             mGridView.setAdapter(mCommandAdapter);
-        } else mGridView.setAdapter(null);
+        }
+        else mGridView.setAdapter(null);
     }
 
     @Override
@@ -207,7 +203,7 @@ public class CommandGridFragment extends Fragment {
             mItemToggleButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 mCommand.setWhat(isChecked ? 1 : 0);
                     new Thread(() -> {
-                        inviaCommand("*" + mCommand.getWho() + "*" + mCommand.getWhat() + "*" + mCommand.getWhere() + "##");
+                       Dashboard.inviaCommand("*" + mCommand.getWho() + "*" + mCommand.getWhat() + "*" + mCommand.getWhere() + "##");
                     }).start();
 
             });
@@ -226,12 +222,7 @@ public class CommandGridFragment extends Fragment {
         i.putExtra(CommandFragment.EXTRA_COMMAND_ID, command.getId());
         startActivity(i);
     }
-    public void inviaCommand(String openwebnetString) {
-        GestioneSocketComandi gestioneSocketComandi= new GestioneSocketComandi();
-        gestioneSocketComandi.connect(Dashboard.sIp, Dashboard.PORT, Dashboard.sPasswordOpen);
-        gestioneSocketComandi.invia(openwebnetString);
-        gestioneSocketComandi.close();
-    }
+
 
     @Override
     public void onStop() {

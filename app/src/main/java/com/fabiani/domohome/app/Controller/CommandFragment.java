@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ public class CommandFragment extends Fragment {
 		//noinspection ConstantConditions
 		((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		mCommandTitleEditText = (EditText) v.findViewById(R.id.command_title_edit_text);
+
 		mCommandTitleEditText.setText(mCommand.getTitle());
 		mCommandTitleEditText.addTextChangedListener(new TextWatcher() {
 
@@ -62,6 +64,8 @@ public class CommandFragment extends Fragment {
 			public void afterTextChanged(Editable s) {
 			}
 		});
+
+
 		mWhoSpinner = (Spinner) v.findViewById(R.id.command_who_spinner);
 		ArrayAdapter<CharSequence> mWhoAdapter = ArrayAdapter
 				.createFromResource(getActivity(), R.array.who_array, android.R.layout.simple_spinner_item);
