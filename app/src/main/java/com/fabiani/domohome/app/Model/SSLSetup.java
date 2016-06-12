@@ -2,7 +2,6 @@ package com.fabiani.domohome.app.model;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
@@ -19,8 +18,6 @@ public class SSLSetup {
                 "com.sun.net.ssl.internal.www.protocol");
     }*/
     public static void overrideTrustManager() {
-//use our own trust manager so we can always trust
-//the URL entered in the configuration.
         X509TrustManager tm = new X509TrustManager();
         KeyManager[] km = null;
         X509TrustManager[] tma = new X509TrustManager[] { tm };
@@ -31,7 +28,7 @@ public class SSLSetup {
             SSLSocketFactory sf1 = sslContext.getSocketFactory();
             HttpsURLConnection.setDefaultSSLSocketFactory(sf1);
 
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier());
+            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifierSetup());
 
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace(System.out);
