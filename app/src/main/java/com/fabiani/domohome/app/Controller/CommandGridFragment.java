@@ -223,7 +223,6 @@ public class CommandGridFragment extends Fragment {
         startActivity(i);
     }
 
-
     @Override
     public void onStop() {
         super.onStop();
