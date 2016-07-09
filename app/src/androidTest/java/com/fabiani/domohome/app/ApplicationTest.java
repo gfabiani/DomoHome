@@ -10,6 +10,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 /**
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
  */
@@ -18,18 +21,11 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         super(Application.class);
     }
 
-    @Test()
-     public void videoFetchrTest() {
+    public void testGetUrlBytesEqualToNull() throws IOException {
         VideoFetchr videoFetchr = new VideoFetchr();
         Dashboard.sIp = "10.0.0.36";
         Dashboard.sPasswordOpen = 22071975;
-        byte[] b=null;
-        try {
-            b = videoFetchr.getUrlBytes("https://"+Dashboard.sIp+"/tele.php");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        assertEquals(null, b);
-
+        byte[] b = videoFetchr.getUrlBytes("https://" + Dashboard.sIp + "/tele.php");
+        assertThat("Not null value is good! ", b, equalTo(null));
     }
 }
