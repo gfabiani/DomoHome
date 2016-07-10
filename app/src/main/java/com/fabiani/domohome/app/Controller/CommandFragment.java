@@ -45,7 +45,6 @@ public class CommandFragment extends Fragment {
 		//noinspection ConstantConditions
 		((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		mCommandTitleEditText = (EditText) v.findViewById(R.id.command_title_edit_text);
-
 		mCommandTitleEditText.setText(mCommand.getTitle());
 		mCommandTitleEditText.addTextChangedListener(new TextWatcher() {
 

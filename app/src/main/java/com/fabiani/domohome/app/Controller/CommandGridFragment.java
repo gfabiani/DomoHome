@@ -151,8 +151,11 @@ public class CommandGridFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_settings:
-                Intent i = new Intent(getActivity(), SettingsActivity.class);
-                startActivity(i);
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                break;
+            case R.id.menu_item_video:
+                //startActivity(new Intent(getActivity(),VideoActivity.class));
+                Toast.makeText(getActivity(), "WORK in progress   ", Toast.LENGTH_SHORT).show();
                 break;
         }
         return true;

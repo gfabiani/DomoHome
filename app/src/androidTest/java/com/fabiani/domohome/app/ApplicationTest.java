@@ -25,7 +25,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         VideoFetchr videoFetchr = new VideoFetchr();
         Dashboard.sIp = "10.0.0.36";
         Dashboard.sPasswordOpen = 22071975;
-        byte[] b = videoFetchr.getUrlBytes("https://" + Dashboard.sIp + "/tele.php");
+        byte[] b = videoFetchr.getUrlBytes("https://" + Dashboard.sIp + "/telecamera.php");
         assertThat("Not null value is good! ", b, equalTo(null));
     }
 }

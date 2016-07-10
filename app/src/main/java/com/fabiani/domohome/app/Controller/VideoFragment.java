@@ -16,7 +16,7 @@ import java.io.IOException;
 
 public class VideoFragment extends Fragment {
 
-    private ImageView imageView;
+    private ImageView mImageView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,9 +27,8 @@ public class VideoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_video, container, false);
-        imageView = (ImageView) v.findViewById(R.id.imageView);
+        mImageView = (ImageView) v.findViewById(R.id.imageView);
         return v;
     }
 
@@ -39,18 +38,24 @@ public class VideoFragment extends Fragment {
         protected Bitmap doInBackground(Void... params) {
             byte[] b = new byte[0];
             try {
-                b = new VideoFetchr().getUrlBytes("https://" + Dashboard.sIp + "/tele.php");
+                b = new VideoFetchr().getUrlBytes("https://" + Dashboard.sIp + "/telecamera.php");
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            final Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
             return bitmap;
         }
 
         @Override
         protected void onPostExecute(Bitmap result) {
-            imageView.setImageBitmap(result);
+            mImageView.setImageBitmap(result);
         }
+    }
+    public static VideoFragment newInstance() {
+        VideoFragment fragment = new VideoFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
     }
 }
 
