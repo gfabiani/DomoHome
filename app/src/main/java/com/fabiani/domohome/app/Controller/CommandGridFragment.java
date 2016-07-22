@@ -3,7 +3,6 @@ package com.fabiani.domohome.app.controller;
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.Intent;
-import android.graphics.Outline;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -18,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewOutlineProvider;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
@@ -29,8 +27,8 @@ import com.annimon.stream.Stream;
 import com.fabiani.domohome.app.R;
 import com.fabiani.domohome.app.model.Command;
 import com.fabiani.domohome.app.model.Dashboard;
-import com.fabiani.domohome.app.model.GestioneSocketComandi;
 import com.fabiani.domohome.app.model.GestioneSocketMonitor;
+
 import java.util.List;
 
 /**
@@ -154,8 +152,8 @@ public class CommandGridFragment extends Fragment {
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
                 break;
             case R.id.menu_item_video:
-                //startActivity(new Intent(getActivity(),VideoActivity.class));
-                Toast.makeText(getActivity(), "WORK in progress   ", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(),VideoActivity.class));
+                //Toast.makeText(getActivity(), "WORK in progress   ", Toast.LENGTH_SHORT).show();
                 break;
         }
         return true;

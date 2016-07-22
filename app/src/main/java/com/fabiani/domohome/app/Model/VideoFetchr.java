@@ -12,29 +12,26 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public class VideoFetchr {
     private static final String TAG = "VideoFetchr";
-    private GestioneSocketComandi socketCom;
+    private static GestioneSocketComandi socketCom=new GestioneSocketComandi();
     byte[] bytes1 = new byte[100000];
     byte[] bytes2; // contiene l'immagine jpeg
     DataInputStream br;
 
     public byte[] getUrlBytes(String urlSpec) throws IOException {
-        socketCom = new GestioneSocketComandi();
-        if (GestioneSocketComandi.stato == 0) { //non sono ancora connesso
-            if (socketCom.connect(Dashboard.sIp, Dashboard.PORT, Dashboard.sPasswordOpen)) {
-                socketCom.invia("*7*9**##");
-            }
+        switch (GestioneSocketComandi.stato){
+            case 0:
+                if (socketCom.connect(Dashboard.sIp, Dashboard.PORT, Dashboard.sPasswordOpen)) {
+                    socketCom.invia("*6*9**##");
+                    Log.i(TAG," Video grabber activated  ");
+                    socketCom.invia("*6*0*4000##");//TODO: make 40 partially and the rest variable
+                    Log.i(TAG,"Camera sctivated  "); //TODO: Thread time out scaduto
 
-        } else if (GestioneSocketComandi.stato == 3) {
-            socketCom.invia("*7*9**##");
-        } else
-            Log.i(TAG, "Connection failed");
+        }
+        break;
+            case 3:
+                socketCom.invia("*6*0*4000##");//TODO: make 40 partially and the rest variable
+                Log.i(TAG,"Camera sctivated  "); //TODO: Thread time out scaduto
 
-        if (GestioneSocketComandi.stato == 0) { //non sono ancora connesso
-            if (socketCom.connect(Dashboard.sIp, Dashboard.PORT, Dashboard.sPasswordOpen)) {
-                socketCom.invia("*6*0*4000##");
-            }
-        } else if (GestioneSocketComandi.stato == 3) {
-            socketCom.invia("*6*0*4000##");
         }
         URL myUrl = new URL(urlSpec);
         SSLSetup.overrideTrustManager();
@@ -71,7 +68,6 @@ public class VideoFetchr {
         for(int z = 0; z < length; z++){
             bytes2[z] = (byte)bytes1[z];
         }
-        br.close();
         return bytes2;
     }
 }

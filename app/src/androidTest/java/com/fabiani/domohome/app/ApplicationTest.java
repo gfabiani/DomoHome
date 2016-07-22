@@ -21,7 +21,11 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         super(Application.class);
     }
 
-    public void testGetUrlBytesEqualToNull() throws IOException {
+    // probably this test is not isolated because it depends on server status. Maybe mock is needed
+    // FIRST acronym violated
+
+    @Test
+    public void getUrlBytesEqualToNull() throws IOException {
         VideoFetchr videoFetchr = new VideoFetchr();
         Dashboard.sIp = "10.0.0.36";
         Dashboard.sPasswordOpen = 22071975;
