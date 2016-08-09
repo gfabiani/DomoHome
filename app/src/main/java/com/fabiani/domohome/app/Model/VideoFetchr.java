@@ -1,7 +1,8 @@
 package com.fabiani.domohome.app.model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
-
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -12,27 +13,11 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public class VideoFetchr {
     private static final String TAG = "VideoFetchr";
-    private static GestioneSocketComandi socketCom=new GestioneSocketComandi();
-    byte[] bytes1 = new byte[100000];
-    byte[] bytes2; // contiene l'immagine jpeg
-    DataInputStream br;
+    private static GestioneSocketComandi
+            mGestioneSocketComandi=new GestioneSocketComandi();
+    DataInputStream dataInputStream;
 
-    public byte[] getUrlBytes(String urlSpec) throws IOException {
-        switch (GestioneSocketComandi.stato){
-            case 0:
-                if (socketCom.connect(Dashboard.sIp, Dashboard.PORT, Dashboard.sPasswordOpen)) {
-                    socketCom.invia("*6*9**##");
-                    Log.i(TAG," Video grabber activated  ");
-                    socketCom.invia("*6*0*4000##");//TODO: make 40 partially and the rest variable
-                    Log.i(TAG,"Camera sctivated  "); //TODO: Thread time out scaduto
-
-        }
-        break;
-            case 3:
-                socketCom.invia("*6*0*4000##");//TODO: make 40 partially and the rest variable
-                Log.i(TAG,"Camera sctivated  "); //TODO: Thread time out scaduto
-
-        }
+    public Bitmap getUrlBitmap(String urlSpec) throws IOException {
         URL myUrl = new URL(urlSpec);
         SSLSetup.overrideTrustManager();
         HttpsURLConnection urlc = (HttpsURLConnection) myUrl.openConnection();
@@ -40,34 +25,34 @@ public class VideoFetchr {
         urlc.setDoOutput(true);
         urlc.setUseCaches(false);
         urlc.connect();
+        dataInputStream = new DataInputStream(urlc.getInputStream());//TODO: Priority high: Close the stream. Command open too
+        return BitmapFactory.decodeStream(dataInputStream);//TODO: resize image
+    }
 
-        //bytes0 = new byte[100000];
-        bytes1 = new byte[100000];
-
-        br = new DataInputStream(urlc.getInputStream());
-
-        int length = 0;
-        int temp;
-
-        while(true){
-            try{
-                temp = br.read();
-                if(temp == -1) break;
-                bytes1[length] = (byte)temp;
-                length++;
-            } catch (IOException e1) {
-
-                Log.i(TAG,"IOException reading datastream ");
-                e1.printStackTrace();
-
+    public static void sendVideoOpen() {
+        switch (GestioneSocketComandi.stato){
+            case 0://non sono ancora connesso
+                if (mGestioneSocketComandi.connect(Dashboard.sIp, Dashboard.PORT, Dashboard.sPasswordOpen)) {
+                    mGestioneSocketComandi.invia("*6*9**##");
+                    Log.i(TAG,"Video grabber activated  ");
+                    mGestioneSocketComandi.invia("*6*0*4000##");//TODO: make 40  constant  and the rest of the string   variable
+                    Log.i(TAG,"Camera sctivated  ");
+                }
+                break;
+            case 3://sono già connesso
+                mGestioneSocketComandi.invia("*6*0*4000##");
+                Log.i(TAG,"Camera sctivated  ");
+                break;
+        }
+    }
+    public void close(){//TODO: to be integrated
+        if(mGestioneSocketComandi != null){
+                mGestioneSocketComandi.invia("*6*9**##");
+                mGestioneSocketComandi.close();
+                mGestioneSocketComandi = null;
+                GestioneSocketComandi.stato = 0;
+               Log.i(TAG,"MON: Socket monitor closed  successfully-----\n");
             }
         }
-
-        bytes2 = new byte[length];
-
-        for(int z = 0; z < length; z++){
-            bytes2[z] = (byte)bytes1[z];
-        }
-        return bytes2;
     }
-}
+
