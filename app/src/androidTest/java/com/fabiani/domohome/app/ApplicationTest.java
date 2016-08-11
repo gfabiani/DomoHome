@@ -1,9 +1,12 @@
 package com.fabiani.domohome.app;
 
 import android.app.Application;
+import android.graphics.Bitmap;
 import android.test.ApplicationTestCase;
 
+import com.fabiani.domohome.app.controller.SettingsFragment;
 import com.fabiani.domohome.app.model.Dashboard;
+import com.fabiani.domohome.app.model.GestioneSocketComandi;
 import com.fabiani.domohome.app.model.VideoFetchr;
 
 import org.junit.Test;
@@ -29,7 +32,22 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         VideoFetchr videoFetchr = new VideoFetchr();
         Dashboard.sIp = "10.0.0.36";
         Dashboard.sPasswordOpen = 22071975;
-        byte[] b = videoFetchr.getUrlBytes("https://" + Dashboard.sIp + "/telecamera.php");
+        Bitmap b = videoFetchr.getUrlBitmap("https://" + Dashboard.sIp + "/telecamera.php");
         assertThat("Not null value is good! ", b, equalTo(null));
     }
+    @Test
+    public void validateIpIsTtrue() throws IOException {
+        assertThat(" is Ip valid?true  value is good! ",  SettingsFragment.validateIp(Dashboard.sIp), equalTo(true));
+    }
+
+
+    public void Checkconnection() throws IOException {
+        GestioneSocketComandi gestioneSocketComandi=new GestioneSocketComandi();
+        Dashboard.sIp = "10.0.0.36";
+        Dashboard.sPasswordOpen = 22071975;
+        gestioneSocketComandi.connect(Dashboard.sIp,20000,Dashboard.PORT);
+        boolean connected=false;
+
+    }
+
 }

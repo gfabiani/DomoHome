@@ -58,7 +58,7 @@ public class CommandGridFragment extends Fragment {
                 if((Boolean)object)
                     getActivity().runOnUiThread(()->Toast.makeText(getActivity(),R.string.host_unricheable,Toast.LENGTH_LONG).show());
             });
-        if (!Dashboard.isNetworkActiveConnected(getActivity()))
+        if (!SettingsFragment.isNetworkActiveConnected(getActivity()))
             Toast.makeText(getActivity(), R.string.commandgridfragment_network_inactive, Toast.LENGTH_LONG).show();
         if (!SettingsFragment.isIpValid)
             Toast.makeText(getActivity(), R.string.connector_ip_error, Toast.LENGTH_SHORT).show();
@@ -68,6 +68,7 @@ public class CommandGridFragment extends Fragment {
             new Thread(()->{
                mGestioneSocketMonitor.connect(Dashboard.sIp,Dashboard.PORT,Dashboard.sPasswordOpen);
             }).start();
+
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

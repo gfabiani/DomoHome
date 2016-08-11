@@ -58,13 +58,6 @@ public class Dashboard  {
 		gestioneSocketComandi.close();
 	}
 
-	public static boolean isNetworkActiveConnected(Context c) {
-		ConnectivityManager cm =
-				(ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-		return activeNetwork != null &&
-				activeNetwork.isConnected();
-	}
 
 	public List<Command> getCommands() {
 		return mCommands;

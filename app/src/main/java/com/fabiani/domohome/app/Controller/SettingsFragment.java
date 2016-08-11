@@ -1,6 +1,9 @@
 package com.fabiani.domohome.app.controller;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceFragment;
@@ -29,7 +32,7 @@ public class SettingsFragment extends PreferenceFragment {
 	private static Pattern mIpPattern = Patterns.IP_ADDRESS;
 	private static  Matcher mIpMatcher;
 	private Toolbar mToolbar;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,7 +51,7 @@ public class SettingsFragment extends PreferenceFragment {
             SharedPreferences.Editor editor = PreferenceManager.
                     getDefaultSharedPreferences(getActivity()).edit();
             editor.putString(IP_KEY, sAddressInput);
-            if (validateIp())
+            if (validateIp(sAddressInput))
                 isIpValid = true;
             else {
                 Toast.makeText(getActivity(), R.string.connector_ip_error, Toast.LENGTH_SHORT).show();
@@ -84,10 +87,18 @@ public class SettingsFragment extends PreferenceFragment {
 			mPasswordOpenEditTextPreference.setText(Integer.toString(Dashboard.sPasswordOpen));
 	}
 
-	public  static boolean validateIp() {
-		mIpMatcher = mIpPattern.matcher(sAddressInput);
+	public  static boolean validateIp(String addressinput) {
+		mIpMatcher = mIpPattern.matcher(addressinput);
         return mIpMatcher.matches();
 	}
+	public static boolean isNetworkActiveConnected(Context c) {
+		ConnectivityManager cm =
+				(ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		return activeNetwork != null &&
+				activeNetwork.isConnected();
+	}
+
 
 	public static SettingsFragment newInstance(){
 		Bundle args=new Bundle();
