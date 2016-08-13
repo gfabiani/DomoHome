@@ -1,9 +1,7 @@
 package com.fabiani.domohome.app.controller;
 
-import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
@@ -22,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.fabiani.domohome.app.R;
@@ -54,7 +53,7 @@ public class CommandGridFragment extends Fragment {
         StrictMode.setThreadPolicy(policy);
         mCommands = Dashboard.get(getActivity()).getCommands();
         mGestioneSocketMonitor =new GestioneSocketMonitor();
-        mGestioneSocketMonitor.addObserver((observable, object) -> {
+        mGestioneSocketMonitor.addObserver((observable, object) -> {//TODO: rethink about, use java beans instead
                 if((Boolean)object)
                     getActivity().runOnUiThread(()->Toast.makeText(getActivity(),R.string.host_unricheable,Toast.LENGTH_LONG).show());
             });
@@ -68,18 +67,11 @@ public class CommandGridFragment extends Fragment {
             new Thread(()->{
                mGestioneSocketMonitor.connect(Dashboard.sIp,Dashboard.PORT,Dashboard.sPasswordOpen);
             }).start();
-
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View v = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            v = inflater.inflate(R.layout.fragment_grid, parent, false);
-        else
-            super.onCreateView(inflater, parent, savedInstanceState);
-        //noinspection ConstantConditions
+        View v = inflater.inflate(R.layout.fragment_grid, parent, false);
         Toolbar mToolbar = (Toolbar) v.findViewById(R.id.tool_bar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         mGridView = (GridView) v.findViewById(R.id.gridView);
@@ -96,6 +88,7 @@ public class CommandGridFragment extends Fragment {
         tabs.addTab(tabLighting);
         tabs.addTab(tabAutomatism);
         tabs.addTab(tabAll);
+        //noinspection deprecation
         tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             @Override
@@ -154,7 +147,6 @@ public class CommandGridFragment extends Fragment {
                 break;
             case R.id.menu_item_video:
                 startActivity(new Intent(getActivity(),VideoActivity.class));
-                //Toast.makeText(getActivity(), "WORK in progress   ", Toast.LENGTH_SHORT).show();
                 break;
         }
         return true;

@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:paddingRight="2dp"
+        android:paddingEnd="2dp"
         android:focusable="false"
         android:paddingTop="4dp"
         android:gravity="center"/>
