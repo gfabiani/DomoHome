@@ -35,7 +35,7 @@ import java.util.Observable;
  * Gestione della socket Monitor, apertura monitor, chiusura monitor
  * 
  */
-public class GestioneSocketMonitor extends Observable {
+public class GestioneSocketMonitor extends Observable {// TODO: Do not extend Observable. Find any alternative
 	static final String socketMonitor = "*99*1##";
 	static ReadThread readThMon = null; //thread per la ricezione dei caratteri inviati dal webserver
 	static NewThread timeoutThreadMon = null; //thread per la gestione dei timeout

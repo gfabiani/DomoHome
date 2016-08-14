@@ -34,10 +34,11 @@ import java.util.List;
  * Created by Giovanni on 26/12/2014.
  */
 public class CommandGridFragment extends Fragment {
+    //TODO: CoordinatorLayout
     static final String TAG = "CommandGridFragment";
-    private static final int LIGHTING_TAB_SELECTED=0;
-    private static final int AUTOMATISM_TAB_SELECTED=1;
-    private static final int ALL_TAB_SELECTED=2;
+    private static final int LIGHTING_TAB_SELECTED = 0;
+    private static final int AUTOMATISM_TAB_SELECTED = 1;
+    private static final int ALL_TAB_SELECTED = 2;
     private List<Command> mCommands;
     private List<Command> mAutomatismCommands;
     private List<Command> mLightingCommands;
@@ -52,11 +53,11 @@ public class CommandGridFragment extends Fragment {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         mCommands = Dashboard.get(getActivity()).getCommands();
-        mGestioneSocketMonitor =new GestioneSocketMonitor();
-        mGestioneSocketMonitor.addObserver((observable, object) -> {//TODO: rethink about, use java beans instead
-                if((Boolean)object)
-                    getActivity().runOnUiThread(()->Toast.makeText(getActivity(),R.string.host_unricheable,Toast.LENGTH_LONG).show());
-            });
+        mGestioneSocketMonitor = new GestioneSocketMonitor();
+        mGestioneSocketMonitor.addObserver((observable, object) -> {//TODO: rethink about it , use java beans instead
+            if ((Boolean) object)
+                getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), R.string.host_unricheable, Toast.LENGTH_LONG).show());
+        });
         if (!SettingsFragment.isNetworkActiveConnected(getActivity()))
             Toast.makeText(getActivity(), R.string.commandgridfragment_network_inactive, Toast.LENGTH_LONG).show();
         if (!SettingsFragment.isIpValid)
@@ -64,8 +65,8 @@ public class CommandGridFragment extends Fragment {
         if (!SettingsFragment.isPassordOpenValid)
             Toast.makeText(getActivity(), R.string.commandgridgragment_valid_password, Toast.LENGTH_SHORT).show();
         else
-            new Thread(()->{
-               mGestioneSocketMonitor.connect(Dashboard.sIp,Dashboard.PORT,Dashboard.sPasswordOpen);
+            new Thread(() -> {
+                mGestioneSocketMonitor.connect(Dashboard.sIp, Dashboard.PORT, Dashboard.sPasswordOpen);
             }).start();
     }
 
@@ -81,16 +82,14 @@ public class CommandGridFragment extends Fragment {
                 .filter(command -> command.getWho() == Command.WhoChoice.LIGHTING.getValue())
                 .collect(Collectors.toList());
         setupAdapter(mLightingCommands);
-        TabLayout tabs=(TabLayout)v.findViewById(R.id.tabs);
-        TabLayout.Tab tabLighting=tabs.newTab().setText(Command.WhoChoice.LIGHTING.toString());
-        TabLayout.Tab tabAutomatism=tabs.newTab().setText(Command.WhoChoice.AUTOMATISM.toString());
-        TabLayout.Tab tabAll=tabs.newTab().setText(R.string.commandgridfragment_all_commands);
+        TabLayout tabs = (TabLayout) v.findViewById(R.id.tabs);
+        TabLayout.Tab tabLighting = tabs.newTab().setText(Command.WhoChoice.LIGHTING.toString());
+        TabLayout.Tab tabAutomatism = tabs.newTab().setText(Command.WhoChoice.AUTOMATISM.toString());
+        TabLayout.Tab tabAll = tabs.newTab().setText(R.string.commandgridfragment_all_commands);
         tabs.addTab(tabLighting);
         tabs.addTab(tabAutomatism);
         tabs.addTab(tabAll);
-        //noinspection deprecation
-        tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
@@ -120,7 +119,8 @@ public class CommandGridFragment extends Fragment {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-        FloatingActionButton addCommandButton = (FloatingActionButton)v.findViewById(R.id.add_button);
+
+        FloatingActionButton addCommandButton = (FloatingActionButton) v.findViewById(R.id.add_button);
         addCommandButton.setOnClickListener(fab -> newCommandSelected());
         return v;
     }
@@ -129,8 +129,7 @@ public class CommandGridFragment extends Fragment {
         if (mCommands != null) {
             mCommandAdapter = new CommandAdapter(commands);
             mGridView.setAdapter(mCommandAdapter);
-        }
-        else mGridView.setAdapter(null);
+        } else mGridView.setAdapter(null);
     }
 
     @Override
@@ -146,7 +145,7 @@ public class CommandGridFragment extends Fragment {
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
                 break;
             case R.id.menu_item_video:
-                startActivity(new Intent(getActivity(),VideoActivity.class));
+                startActivity(new Intent(getActivity(), VideoActivity.class));
                 break;
         }
         return true;
@@ -196,9 +195,9 @@ public class CommandGridFragment extends Fragment {
             mItemToggleButton.setTextOn(mCommand.getTitle());
             mItemToggleButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 mCommand.setWhat(isChecked ? 1 : 0);
-                    new Thread(() -> {
-                       Dashboard.inviaCommand("*" + mCommand.getWho() + "*" + mCommand.getWhat() + "*" + mCommand.getWhere() + "##");
-                    }).start();
+                new Thread(() -> {
+                    Dashboard.inviaCommand("*" + mCommand.getWho() + "*" + mCommand.getWhat() + "*" + mCommand.getWhere() + "##");
+                }).start();
 
             });
             mItemToggleButton.setOnLongClickListener(v -> {
