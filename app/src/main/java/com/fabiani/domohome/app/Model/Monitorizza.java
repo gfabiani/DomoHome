@@ -73,7 +73,8 @@ public class Monitorizza extends Thread{
 					  			c = ' ';
 					  			System.out.println("Mon: ----- Socket chiusa dal server -----");
 					  			socketMon = null;
-					  			GestioneSocketMonitor.statoMonitor = 0;
+					  			//mGestioneSocketMonitor.setStatoMonitor(0);
+								GestioneSocketMonitor.statoMonitor=0;
 					  			break;
 					        }else{ 
 					        	c = (char)ci;  
@@ -106,15 +107,16 @@ public class Monitorizza extends Thread{
 					GestioneSocketMonitor.responseLineMon = responseString;
 				}else{
 					GestioneSocketMonitor.responseLineMon = null;
-					GestioneSocketMonitor.statoMonitor = 0;
+					//mGestioneSocketMonitor.setStatoMonitor(0);
+					GestioneSocketMonitor.statoMonitor=0;
 					break;
 				}
 
 				System.out.println("Mon: "+ GestioneSocketMonitor.responseLineMon);
 				risposta = null;
 
-			}while(GestioneSocketMonitor.statoMonitor == 3);
-			
+			}while(GestioneSocketMonitor.statoMonitor== 3);
+
 			System.out.println("Thread Monitorizza terminato");
 		}
 }

@@ -1,12 +1,12 @@
 package com.fabiani.domohome.app.model;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
 import com.annimon.stream.Stream;
 import com.fabiani.domohome.app.controller.SettingsFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -24,7 +24,7 @@ public class Dashboard  {
 	private JSONSerializer mJSONSerializer;
 	private List<Command> mCommands;
 
-	public Dashboard(Context appContext) {
+	private Dashboard(Context appContext) {
 		mAppContext = appContext;
 		mJSONSerializer = new JSONSerializer(mAppContext, JSON_FILENAME);
 		//commands loading....
@@ -57,7 +57,6 @@ public class Dashboard  {
 		gestioneSocketComandi.invia(openwebnetString);
 		gestioneSocketComandi.close();
 	}
-
 
 	public List<Command> getCommands() {
 		return mCommands;

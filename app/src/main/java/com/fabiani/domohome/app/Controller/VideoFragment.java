@@ -69,7 +69,7 @@ public class VideoFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            mImageView.post(() -> mImageView.setImageBitmap(mBitmap));
+            mImageView.post(() -> mImageView.setImageBitmap(mBitmap));//TODO: resize image
         }
     }
 

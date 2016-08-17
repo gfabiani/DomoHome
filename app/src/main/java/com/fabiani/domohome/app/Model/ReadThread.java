@@ -26,7 +26,7 @@ import java.net.Socket;
 /**
  * Description:
  * Gestisce tramite un thread la ricezione di una stringa inviata dal WebServer
- * 
+ *
  */
 public class ReadThread extends Thread {
 
@@ -77,8 +77,8 @@ public class ReadThread extends Thread {
 					System.out.println("----- Socket chiusa dal server -----");
 					socket = null;
 					if(tipoSocket == 0){
-//						ClientFrame.gestSocketComandi.stato = 0;
-//						ClientFrame.gestSocketComandi.socket = null;
+						GestioneSocketComandi.stato=0;
+						GestioneSocketComandi.socket=null;
 					}else{
 						GestioneSocketMonitor.statoMonitor = 0;
 						GestioneSocketMonitor.socketMon = null;

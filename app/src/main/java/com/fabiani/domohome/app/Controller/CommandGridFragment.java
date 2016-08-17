@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.annimon.stream.Collectors;
@@ -53,21 +52,8 @@ public class CommandGridFragment extends Fragment {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         mCommands = Dashboard.get(getActivity()).getCommands();
-        mGestioneSocketMonitor = new GestioneSocketMonitor();
-        mGestioneSocketMonitor.addObserver((observable, object) -> {//TODO: rethink about it , use java beans instead
-            if ((Boolean) object)
-                getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), R.string.host_unricheable, Toast.LENGTH_LONG).show());
-        });
-        if (!SettingsFragment.isNetworkActiveConnected(getActivity()))
-            Toast.makeText(getActivity(), R.string.commandgridfragment_network_inactive, Toast.LENGTH_LONG).show();
-        if (!SettingsFragment.isIpValid)
-            Toast.makeText(getActivity(), R.string.connector_ip_error, Toast.LENGTH_SHORT).show();
-        if (!SettingsFragment.isPassordOpenValid)
-            Toast.makeText(getActivity(), R.string.commandgridgragment_valid_password, Toast.LENGTH_SHORT).show();
-        else
-            new Thread(() -> {
-                mGestioneSocketMonitor.connect(Dashboard.sIp, Dashboard.PORT, Dashboard.sPasswordOpen);
-            }).start();
+        mGestioneSocketMonitor=new GestioneSocketMonitor();
+        mGestioneSocketMonitor.connect(Dashboard.sIp, Dashboard.PORT, Dashboard.sPasswordOpen);
     }
 
     @Override
@@ -195,10 +181,7 @@ public class CommandGridFragment extends Fragment {
             mItemToggleButton.setTextOn(mCommand.getTitle());
             mItemToggleButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 mCommand.setWhat(isChecked ? 1 : 0);
-                new Thread(() -> {
-                    Dashboard.inviaCommand("*" + mCommand.getWho() + "*" + mCommand.getWhat() + "*" + mCommand.getWhere() + "##");
-                }).start();
-
+                Dashboard.inviaCommand("*" + mCommand.getWho() + "*" + mCommand.getWhat() + "*" + mCommand.getWhere() + "##");
             });
             mItemToggleButton.setOnLongClickListener(v -> {
                 getActivity().openContextMenu(v);
@@ -227,7 +210,5 @@ public class CommandGridFragment extends Fragment {
         super.onDestroy();
         if (mGestioneSocketMonitor != null)
             mGestioneSocketMonitor.close();
-        //noinspection ConstantConditions
-        mGestioneSocketMonitor.deleteObservers();
     }
 }

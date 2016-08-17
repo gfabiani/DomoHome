@@ -1,5 +1,3 @@
-package com.fabiani.domohome.app.model;
-
 /***************************************************************************
  * 			              GestioneSocketMonitor.java                       *
  * 			              --------------------------                       *
@@ -19,6 +17,7 @@ package com.fabiani.domohome.app.model;
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+package com.fabiani.domohome.app.model;
 
 import com.bticino.openwebnet.OpenWebNetUtils;
 
@@ -27,22 +26,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Observable;
-
-
 /**
  * Description:
  * Gestione della socket Monitor, apertura monitor, chiusura monitor
- * 
+ *
  */
-public class GestioneSocketMonitor extends Observable {// TODO: Do not extend Observable. Find any alternative
+public class GestioneSocketMonitor {// TODO: Do not extend Observable. Find any alternative
 	static final String socketMonitor = "*99*1##";
 	static ReadThread readThMon = null; //thread per la ricezione dei caratteri inviati dal webserver
 	static NewThread timeoutThreadMon = null; //thread per la gestione dei timeout
 	static int  statoMonitor = 0;  //stato socket monitor
-	static boolean isIOExceptionCaught = false;
-	public static Socket socketMon = null;
-	public static String responseLineMon = null; //stringa in ricezione dal Webserver
+	static Socket socketMon = null;
+	static String responseLineMon = null; //stringa in ricezione dal Webserver
 	BufferedReader inputMon = null;
 	PrintWriter outputMon = null;
 	Monitorizza monThread = null;
@@ -65,16 +60,13 @@ public class GestioneSocketMonitor extends Observable {// TODO: Do not extend Ob
 			outputMon = new PrintWriter(socketMon.getOutputStream(),true);
 			System.out.println("Mon: Print Writer creato");
 		}catch (IOException e){
-			isIOExceptionCaught=true;
-			setChanged();
-			notifyObservers(isIOExceptionCaught);
 			System.out.println("Mon: Impossibile connettersi con host " + ip + "\n");
 			this.close();
 		}
 
 		if(socketMon != null){
-		    while(true){
-		    	readThMon = null;
+			while(true){
+				readThMon = null;
 				readThMon = new ReadThread(socketMon,inputMon,1);
 				readThMon.start();
 				try{
@@ -86,83 +78,83 @@ public class GestioneSocketMonitor extends Observable {// TODO: Do not extend Ob
 				}
 
 				if(responseLineMon != null){
-		    		if (statoMonitor == 0 ){
-			        	System.out.println("\nMon: ----- STATO 0 ----- ");
-			        	System.out.println("Mon: Rx: " + responseLineMon);
-			            if (responseLineMon.equals(OpenWebNet.MSG_OPEN_OK)) {
-			            	System.out.println("Mon: Tx: " + socketMonitor);
-			            	outputMon.write(socketMonitor); //comandi
-			            	outputMon.flush();
-			            	statoMonitor = 1; //setto stato autenticazione
-			            	setTimeout(1);
-			            }else{
-			            	//se non mi connetto chiudo la socket
-			                System.out.println("Mon: Chiudo la socket verso il server ");
-			                this.close();
-			            	break; 
-			            }
-					} else if (statoMonitor == 1){ 
+					if (statoMonitor == 0 ){
+						System.out.println("\nMon: ----- STATO 0 ----- ");
+						System.out.println("Mon: Rx: " + responseLineMon);
+						if (responseLineMon.equals(OpenWebNet.MSG_OPEN_OK)) {
+							System.out.println("Mon: Tx: " + socketMonitor);
+							outputMon.write(socketMonitor); //comandi
+							outputMon.flush();
+							statoMonitor = 1; //setto stato autenticazione
+							setTimeout(1);
+						}else{
+							//se non mi connetto chiudo la socket
+							System.out.println("Mon: Chiudo la socket verso il server ");
+							this.close();
+							break;
+						}
+					} else if (statoMonitor == 1){
 						System.out.println("\nMon: ----- STATO 1 -----");
-						System.out.println("Mon: Rx: " + responseLineMon);						 
-						
-					    	//applico algoritmo di conversione
-							System.out.println("Controllo sulla password");
-							//long risultato = gestPassword.applicaAlgoritmo(passwordOpen, responseLine);
-							Long seed = Long.valueOf(responseLineMon.substring(2, responseLineMon.length() - 2));
-							System.out.println("Tx: " + "seed=" + seed);
-							Long risultato = OpenWebNetUtils.passwordFromSeed(seed, passwordOpen);
-							System.out.println("Tx: " + "*#" + risultato + "##");
-							outputMon.write("*#" + risultato + "##");
-					    	outputMon.flush();
-					    	statoMonitor = 2; //setto stato dopo l'autenticazione 
-				        	setTimeout(1);
+						System.out.println("Mon: Rx: " + responseLineMon);
 
-				    } else if(statoMonitor == 2){
-				    	System.out.println("\nMon: ----- STATO 2 -----");
-				    	System.out.println("Mon: Rx: " + responseLineMon);
-				    	if (responseLineMon.equals(OpenWebNet.MSG_OPEN_OK)) {
-			               	System.out.println("Mon: Monitor attivata con successo");
-			               	statoMonitor = 3;
-			               	break;
-			            }else{
-			            	System.out.println("Mon: Impossibile attivare la monitor");
-			               	//se non mi connetto chiudo la socket
-			               	System.out.println("Mon: Chiudo la socket monitor\n");
-			               	this.close();
-			               	break;			               	
-			            }
-				    } else break; //non dovrebbe servire (quando passo per lo stato tre esco dal ciclo con break)
-		    	}else{
-		    		System.out.println("Mon: Risposta dal webserver NULL");
-		    		this.close();
-		    		break;//ramo else della funzione riceviStringa()
-		    	}
-		    }//chiude while(true)
+						//applico algoritmo di conversione
+						System.out.println("Controllo sulla password");
+						//long risultato = gestPassword.applicaAlgoritmo(passwordOpen, responseLine);
+						Long seed = Long.valueOf(responseLineMon.substring(2, responseLineMon.length() - 2));
+						System.out.println("Tx: " + "seed=" + seed);
+						Long risultato = OpenWebNetUtils.passwordFromSeed(seed, passwordOpen);
+						System.out.println("Tx: " + "*#" + risultato + "##");
+						outputMon.write("*#" + risultato + "##");
+						outputMon.flush();
+						statoMonitor = 2; //setto stato dopo l'autenticazione
+						setTimeout(1);
+
+					} else if(statoMonitor == 2){
+						System.out.println("\nMon: ----- STATO 2 -----");
+						System.out.println("Mon: Rx: " + responseLineMon);
+						if (responseLineMon.equals(OpenWebNet.MSG_OPEN_OK)) {
+							System.out.println("Mon: Monitor attivata con successo");
+							statoMonitor = 3;
+							break;
+						}else{
+							System.out.println("Mon: Impossibile attivare la monitor");
+							//se non mi connetto chiudo la socket
+							System.out.println("Mon: Chiudo la socket monitor\n");
+							this.close();
+							break;
+						}
+					} else break; //non dovrebbe servire (quando passo per lo stato tre esco dal ciclo con break)
+				}else{
+					System.out.println("Mon: Risposta dal webserver NULL");
+					this.close();
+					break;//ramo else della funzione riceviStringa()
+				}
+			}//chiude while(true)
 		}
-		
+
 		if(statoMonitor == 3){
 			monThread = null;
 			monThread = new Monitorizza(socketMon, inputMon);
-			monThread.start();		
-		}   
-		
+			monThread.start();
+		}
+
 		if (statoMonitor == 3) return true;
 		else return false;
-		
+
 	}//chiude connect()
-	
-	
+
+
 	/**
 	 * Chiude la socket monitor ed imposta statoMonitor = 0
 	 *
 	 */
 	public void close(){
 		if(socketMon != null){
-			try { 
+			try {
 				socketMon.close();
 				socketMon = null;
 				statoMonitor = 0;
-				System.out.println("MON: Socket monitor chiusa correttamente-----\n");				
+				System.out.println("MON: Socket monitor chiusa correttamente-----\n");
 			} catch (IOException e) {
 
 				System.out.println("MON: Errore chiusura Socket: <GestioneSocketMonitor>");
@@ -171,10 +163,10 @@ public class GestioneSocketMonitor extends Observable {// TODO: Do not extend Ob
 		}
 	}
 
-	
+
 	/**
 	 * Attiva il thread per il timeout sulla risposta inviata dal WebServer.
-	 * 
+	 *
 	 * @param tipoSocket: 0 se è socket comandi, 1 se è socket monitor
 	 */
 	public void setTimeout(int tipoSocket){
@@ -183,7 +175,3 @@ public class GestioneSocketMonitor extends Observable {// TODO: Do not extend Ob
 		timeoutThreadMon.start();
 	}
 }
-
-
-
-
