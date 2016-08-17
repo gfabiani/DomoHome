@@ -40,7 +40,7 @@ public class VideoFragment extends Fragment {
         mToolbar = (Toolbar) v.findViewById(R.id.tool_bar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         //noinspection ConstantConditions
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);// TODO:  Implement progress bar
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         return v;
     }
 
@@ -65,7 +65,7 @@ public class VideoFragment extends Fragment {
         @Override
         public void run() {
             try {
-                mBitmap = mVideoFetchr.getUrlBitmap("https://" + Dashboard.sIp + "/telecamera.php");
+                mBitmap = mVideoFetchr.getUrlBitmap("https://" + Dashboard.sIp + "/telecamera.php");//TODO: progress bar
             } catch (IOException e) {
                 e.printStackTrace();
             }

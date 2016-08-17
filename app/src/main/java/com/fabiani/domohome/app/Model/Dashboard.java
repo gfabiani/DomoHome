@@ -15,9 +15,9 @@ import java.util.UUID;
 
 public class Dashboard  {
 	private static final String TAG = "Dashboard";
+	private static Dashboard sDashboard;
 	private static final String JSON_FILENAME = "commands.json";
 	public  static final int PORT = 20000;
-	private static Dashboard sDashboard;
 	public static String sIp;
 	public static int sPasswordOpen;
 	private Context mAppContext;

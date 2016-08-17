@@ -2,10 +2,11 @@ package com.fabiani.domohome.app.model;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.UUID;
 
 public class Command {
-	public static final Integer[] sWhereChoices = new Integer[99];
+	public static final Integer[] sWhereChoices = new Integer[99]; //TODO: Check boundaries
 	private static final String JSON_ID = "id";
 	private static final String JSON_COMMAND_TITLE = "command_title";
 	private static final String JSON_WHAT = "what";

@@ -18,13 +18,9 @@ import javax.net.ssl.HttpsURLConnection;
  * A  third method is responsible of receiving  bitmaps from the server
  */
 
-
 public class VideoFetchr {
     private static final String TAG = "VideoFetchr";
-    private static final int NOT_CONNECTED=0;
-    private static final int CONNECTED=3;
-    private static GestioneSocketComandi
-            sGestioneSocketComandi=new GestioneSocketComandi();
+    private GestioneSocketComandi mGestioneSocketComandi=new GestioneSocketComandi();
     private DataInputStream mDataInputStream;
 
     public Bitmap getUrlBitmap(String urlSpec) throws IOException {
@@ -36,32 +32,20 @@ public class VideoFetchr {
         urlc.setUseCaches(false);
         urlc.connect();
         mDataInputStream = new DataInputStream(urlc.getInputStream());
-        return BitmapFactory.decodeStream(mDataInputStream);//TODO: resize image
+        return BitmapFactory.decodeStream(mDataInputStream);
     }
 
-    public  void open() {
-        switch (GestioneSocketComandi.stato){
-            case NOT_CONNECTED:
-                if (sGestioneSocketComandi.connect(Dashboard.sIp, Dashboard.PORT, Dashboard.sPasswordOpen)) {
-                    sGestioneSocketComandi.invia("*6*9**##");  // Implement other camera commands
-                    Log.i(TAG,"Video grabber activated  ");
-                    sGestioneSocketComandi.invia("*6*0*4000##");//TODO: make 40  constant  and the rest of the string   variable
-                    Log.i(TAG,"Camera sctivated  ");
-                }
-                break;
-            case CONNECTED:
-                sGestioneSocketComandi.invia("*6*0*4000##");
-                Log.i(TAG,"Camera sctivated  ");
-                break;
+    public void open() {// TODO: Implement further commands, e.g. brightness contrast, etc...
+        if (mGestioneSocketComandi.connect(Dashboard.sIp, Dashboard.PORT, Dashboard.sPasswordOpen)) {
+            mGestioneSocketComandi.invia("*6*9**##");  Log.i(TAG, "Video grabber activated");
+            mGestioneSocketComandi.invia("*6*0*4000##"); Log.i(TAG, "Camera sctivated"); //TODO: make 40  constant  and the rest of the string   variable
         }
     }
+
     public void close() throws IOException {
-                mDataInputStream.close();
-                Log.i(TAG,"DataInputStream closed  successfully   ");
-                Log.i(TAG,"GestioneSocketComandi.stato   "+GestioneSocketComandi.stato);
-                GestioneSocketComandi.stato=NOT_CONNECTED;
-                Log.i(TAG,"GestioneSocketComandi. stato  has been set to 0   ");
-            }
-        }
+        mDataInputStream.close();
+        mGestioneSocketComandi.close();
+    }
+}
 
 
