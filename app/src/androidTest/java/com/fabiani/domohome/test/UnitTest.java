@@ -1,4 +1,4 @@
-package com.fabiani.domohome;
+package com.fabiani.domohome.test;
 
 import org.junit.Test;
 

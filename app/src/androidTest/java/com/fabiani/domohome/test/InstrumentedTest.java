@@ -1,4 +1,4 @@
-package com.fabiani.domohome;
+package com.fabiani.domohome.test;
 
 import android.graphics.Bitmap;
 import android.support.test.runner.AndroidJUnit4;
