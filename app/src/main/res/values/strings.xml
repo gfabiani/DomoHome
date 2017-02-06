@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">DomoHome</string>
     <string name="title_activity_command">CommandActivity</string>
@@ -26,6 +25,7 @@
     <string name="commandgridfragment_network_inactive">Network connection inactive </string>
     <string name="password_open_invalid">Password open invalid</string>
     <string name="commandgridgragment_valid_password">Enter password</string>
+    <string name="video">Video Doorphone</string>
     <string-array name="who_array">
         <item>Scenarios</item>
         <item>Lighting</item>
@@ -45,4 +45,5 @@
         <item>Thermoregulation diagnostics</item>
         <item>Device diagnostics</item>
     </string-array>
+
 </resources>

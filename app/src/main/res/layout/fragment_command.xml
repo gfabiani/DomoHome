@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/command_who_label"
-        android:layout_marginLeft="5dp"/>
+        android:layout_marginStart="5dp"/>
     <Spinner 
         android:id="@+id/command_who_spinner"
         android:layout_width="match_parent"
@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/command_where_label"
-        android:layout_marginLeft="5dp"/>
+        android:layout_marginStart="5dp"/>
      <Spinner 
         android:id="@+id/command_where_spinner"
         android:layout_width="match_parent"

@@ -1,22 +1,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+        <include layout="@layout/app_bar" />
 
-    <include layout="@layout/app_bar" />
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.fabiani.domohome.app.controller.VideoFragment">
-
+        android:layout_height="match_parent">
         <ImageView
             android:id="@+id/imageView"
+            android:layout_marginTop="3dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentTop="true">
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter">
         </ImageView>
-    </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>

@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.fabiani.domohome.app">
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    package="com.fabiani.domohome">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".controller.CommandGridActivity"
-            android:label="@string/app_name">
+        <activity android:name=".controller.CommandGridActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".controller.CommandActivity"
+        <activity android:name=".controller.CommandActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".controller.CommandGridActivity" />
-        <activity
-            android:name=".controller.SettingsActivity"
+            android:parentActivityName=".controller.CommandGridActivity"/>
+        <activity android:name=".controller.SettingsActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".controller.CommandGridActivity" />
-        <activity
-            android:name=".controller.VideoActivity"
+            android:parentActivityName=".controller.CommandGridActivity"/>
+        <activity android:name=".controller.VideoActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".controller.CommandGridActivity" />
+            android:parentActivityName=".controller.CommandGridActivity"/>
     </application>
 </manifest>
