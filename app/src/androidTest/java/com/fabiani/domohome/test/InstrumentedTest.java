@@ -2,10 +2,8 @@ package com.fabiani.domohome.test;
 
 import android.graphics.Bitmap;
 import android.support.test.runner.AndroidJUnit4;
-
 import com.fabiani.domohome.model.Dashboard;
 import com.fabiani.domohome.model.VideoFetchr;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -29,5 +27,4 @@ public class InstrumentedTest {
         Bitmap b = videoFetchr.getUrlBitmap("https://" + Dashboard.sIp + "/telecamera.php");
         assertThat("Not null value is good! ", b, equalTo(null));
     }
-
 }

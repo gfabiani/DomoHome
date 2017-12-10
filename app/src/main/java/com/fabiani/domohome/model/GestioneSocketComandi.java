@@ -85,63 +85,70 @@ public class GestioneSocketComandi{
 		}
 
 		if(socket != null){
-			while(true){
+			label:
+			while (true) {
 				readTh = null;
-				readTh = new ReadThread(socket,input,0);
+				readTh = new ReadThread(socket, input, 0);
 				readTh.start();
-				try{
+				try {
 					readTh.join();
-				}catch (InterruptedException e1) {
+				} catch (InterruptedException e1) {
 					System.out.println("----- ERRORE readThread.join() durante la connect:");
 					e1.printStackTrace();
 				}
 
-				if(responseLine != null){
-					if (stato == 0){ //ho mandato la richiesta di connessione
-						System.out.println("\n----- STATO 0 ----- ");
-						System.out.println("Rx: " + responseLine);
-						if (responseLine.equals(OpenWebNet.MSG_OPEN_OK)) {
-							System.out.println("Tx: "+socketComandi);
-							output.write(socketComandi); //comandi
-							output.flush();
-							stato = 1;
-							setTimeout(0);
-						}else{
-							//se non mi connetto chiudo la socket
-							System.out.println("Chiudo la socket verso il server " + ip);
-							this.close();
-							break;
-						}
-					}else if (stato == 1) { //ho mandato il tipo di servizio richiesto
-						System.out.println("----- STATO 1 -----");
-						System.out.println("Rx: " + responseLine);
+				if (responseLine != null) {
+					switch (stato) {
+						case 0:  //ho mandato la richiesta di connessione
+							System.out.println("\n----- STATO 0 ----- ");
+							System.out.println("Rx: " + responseLine);
+							if (responseLine.equals(OpenWebNet.MSG_OPEN_OK)) {
+								System.out.println("Tx: " + socketComandi);
+								output.write(socketComandi); //comandi
 
-						//applico algoritmo di conversione
-						System.out.println("Controllo sulla password");
-						Long seed = Long.valueOf(responseLine.substring(2, responseLine.length() - 2));
-						System.out.println("Tx: " + "seed=" + seed);
-						Long risultato = OpenWebNetUtils.passwordFromSeed(seed, passwordOpen);
-						System.out.println("Tx: " + "*#" + risultato + "##");
-						output.write("*#" + risultato + "##");
-						output.flush();
-						stato = 2; //setto stato dopo l'autenticazione
-						setTimeout(0);
-					} else if (stato == 2) {
-						System.out.println("\n----- STATO 2 -----");
-						System.out.println("Rx: " + responseLine);
-						if (responseLine.equals(OpenWebNet.MSG_OPEN_OK)) {
-							System.out.println("Connessione OK");
-							stato = 3;
+								output.flush();
+								stato = 1;
+								setTimeout(0);
+							} else {
+								//se non mi connetto chiudo la socket
+								System.out.println("Chiudo la socket verso il server " + ip);
+								this.close();
+								break label;
+							}
 							break;
-						} else {
-							System.out.println("Impossibile connettersi!!");
-							//se non mi connetto chiudo la socket
-							System.out.println("Chiudo la socket verso il server " + ip);
-							this.close();
+						case 1:  //ho mandato il tipo di servizio richiesto
+							System.out.println("----- STATO 1 -----");
+							System.out.println("Rx: " + responseLine);
+
+							//applico algoritmo di conversione
+							System.out.println("Controllo sulla password");
+							Long seed = Long.valueOf(responseLine.substring(2, responseLine.length() - 2));
+							System.out.println("Tx: " + "seed=" + seed);
+							Long risultato = OpenWebNetUtils.passwordFromSeed(seed, passwordOpen);
+							System.out.println("Tx: " + "*#" + risultato + "##");
+							output.write("*#" + risultato + "##");
+							output.flush();
+							stato = 2; //setto stato dopo l'autenticazione
+							setTimeout(0);
 							break;
-						}
-					} else break; //non dovrebbe servire (quando passo per lo stato tre esco dal ciclo con break)
-				}else{
+						case 2:
+							System.out.println("\n----- STATO 2 -----");
+							System.out.println("Rx: " + responseLine);
+							if (responseLine.equals(OpenWebNet.MSG_OPEN_OK)) {
+								System.out.println("Connessione OK");
+								stato = 3;
+								break label;
+							} else {
+								System.out.println("Impossibile connettersi!!");
+								//se non mi connetto chiudo la socket
+								System.out.println("Chiudo la socket verso il server " + ip);
+								this.close();
+								break label;
+							}
+						default:
+							break label;
+					}
+				} else {
 					System.out.println("--- Risposta dal webserver NULL");
 					this.close();
 					break;//ramo else di if(responseLine != null)

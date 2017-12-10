@@ -6,7 +6,6 @@ import android.util.Log;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.URL;
-
 import javax.net.ssl.HttpsURLConnection;
 
 /**
@@ -40,7 +39,7 @@ public class VideoFetchr {
             mGestioneSocketComandi.invia("*6*9**##");
             Log.i(TAG, "Video grabber activated");
             mGestioneSocketComandi.invia("*6*0*4000##");
-            Log.i(TAG, "Camera sctivated"); //TODO: make 40  constant  and the rest of the string   variable
+            Log.i(TAG, "Camera activated"); //TODO: make 40  constant  and the rest of the string   variable
         }
     }
 

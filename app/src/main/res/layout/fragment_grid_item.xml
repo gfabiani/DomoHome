@@ -5,14 +5,13 @@
 
     <ToggleButton
         android:id="@+id/command_grid_item_toggleButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:paddingEnd="2dp"
         android:focusable="false"
         android:paddingTop="4dp"
         android:gravity="center"/>
-
 </RelativeLayout>
 

@@ -6,14 +6,7 @@
               android:orientation="vertical">
     <include
             layout="@layout/app_bar"/>
-
-    <android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:tabMode="scrollable"
-            app:tabGravity="fill"/>
-
+    
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
@@ -25,7 +18,7 @@
             android:verticalSpacing="20dp"
             android:horizontalSpacing="10dp"
             android:stretchMode="columnWidth"
-            android:numColumns="3"
+            android:numColumns="2"
             android:gravity="center_vertical"/>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/add_button"

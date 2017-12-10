@@ -14,8 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/command_label"
-        style="?android:listSeparatorTextViewStyle"/>
-    <EditText 
+        style="android:listSeparatorTextViewStyle"/>
+    <EditText
         android:id="@+id/command_title_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/command_details_label"
-        style="?android:listSeparatorTextViewStyle"/>
+        style="android:listSeparatorTextViewStyle"/>
     <TextView 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,6 +46,18 @@
         android:id="@+id/command_where_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/command_where_hint"/>
+        android:hint="@string/command_where_hint" />
+    <TextView
+        android:id="@+id/comand_timeout_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/command_timeout_label"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"/>
+    <Spinner
+        android:id="@+id/command_timeout_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
     </LinearLayout>

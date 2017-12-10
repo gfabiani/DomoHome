@@ -1,27 +1,19 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
-    }
-}
+apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.1'
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
+
+
     defaultConfig {
         applicationId "com.fabiani.domohome"
-        minSdkVersion 22
-        targetSdkVersion 25
+        minSdkVersion 24
+        targetSdkVersion 26
         versionCode
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -34,6 +26,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    repositories {
+        jcenter()
+        google()
+    }
 }
 
 dependencies {
@@ -43,9 +39,9 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.1'
-    compile 'com.android.support:design:25.1.1'
-    compile 'com.annimon:stream:1.1.2'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.google.code.findbugs:jsr305:2.0.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.1.7'
     testCompile 'junit:junit:4.12'
 }
-

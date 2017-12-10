@@ -38,8 +38,8 @@ public class VideoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_video, container,false);
-        mImageView = (ImageView) v.findViewById(R.id.imageView);
-        Toolbar mToolbar = (Toolbar) v.findViewById(R.id.tool_bar);
+        mImageView = v.findViewById(R.id.imageView);
+        Toolbar mToolbar = v.findViewById(R.id.tool_bar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         //noinspection ConstantConditions
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -74,8 +74,7 @@ public class VideoFragment extends Fragment {
     }
 
     private class VideoThread implements Runnable {
-        private Bitmap mBitmap;
-
+        Bitmap mBitmap;
         @Override
         public void run() {
             try {

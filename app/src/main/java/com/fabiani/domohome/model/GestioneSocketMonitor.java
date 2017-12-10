@@ -67,66 +67,74 @@ public class GestioneSocketMonitor {// TODO: Do not extend Observable. Find any 
 		}
 
 		if(socketMon != null){
-			while(true){
+			label:
+			while (true) {
 				readThMon = null;
-				readThMon = new ReadThread(socketMon,inputMon,1);
+				readThMon = new ReadThread(socketMon, inputMon, 1);
 				readThMon.start();
-				try{
+				try {
 					readThMon.join();
-				}catch (InterruptedException e1) {
+				} catch (InterruptedException e1) {
 
 					System.out.println("Mon: ----- ERRORE readThread.join() durante la connect:");
 					e1.printStackTrace();
 				}
 
-				if(responseLineMon != null){
-					if (statoMonitor == 0 ){
-						System.out.println("\nMon: ----- STATO 0 ----- ");
-						System.out.println("Mon: Rx: " + responseLineMon);
-						if (responseLineMon.equals(OpenWebNet.MSG_OPEN_OK)) {
-							System.out.println("Mon: Tx: " + socketMonitor);
-							outputMon.write(socketMonitor); //comandi
+				if (responseLineMon != null) {
+					switch (statoMonitor) {
+						case 0:
+							System.out.println("\nMon: ----- STATO 0 ----- ");
+							System.out.println("Mon: Rx: " + responseLineMon);
+							if (responseLineMon.equals(OpenWebNet.MSG_OPEN_OK)) {
+								System.out.println("Mon: Tx: " + socketMonitor);
+								outputMon.write(socketMonitor); //comandi
+								outputMon.flush();
+								statoMonitor = 1; //setto stato autenticazione
+
+								setTimeout(1);
+							} else {
+								//se non mi connetto chiudo la socket
+								System.out.println("Mon: Chiudo la socket verso il server ");
+								this.close();
+								break label;
+							}
+							break;
+						case 1:
+							System.out.println("\nMon: ----- STATO 1 -----");
+							System.out.println("Mon: Rx: " + responseLineMon);
+
+							//applico algoritmo di conversione
+							System.out.println("Controllo sulla password");
+							//long risultato = gestPassword.applicaAlgoritmo(passwordOpen, responseLine);
+							Long seed = Long.valueOf(responseLineMon.substring(2, responseLineMon.length() - 2));
+							System.out.println("Tx: " + "seed=" + seed);
+							Long risultato = OpenWebNetUtils.passwordFromSeed(seed, passwordOpen);
+							System.out.println("Tx: " + "*#" + risultato + "##");
+							outputMon.write("*#" + risultato + "##");
 							outputMon.flush();
-							statoMonitor = 1; //setto stato autenticazione
+							statoMonitor = 2; //setto stato dopo l'autenticazione
+
 							setTimeout(1);
-						}else{
-							//se non mi connetto chiudo la socket
-							System.out.println("Mon: Chiudo la socket verso il server ");
-							this.close();
-							break;
-						}
-					} else if (statoMonitor == 1){
-						System.out.println("\nMon: ----- STATO 1 -----");
-						System.out.println("Mon: Rx: " + responseLineMon);
 
-						//applico algoritmo di conversione
-						System.out.println("Controllo sulla password");
-						//long risultato = gestPassword.applicaAlgoritmo(passwordOpen, responseLine);
-						Long seed = Long.valueOf(responseLineMon.substring(2, responseLineMon.length() - 2));
-						System.out.println("Tx: " + "seed=" + seed);
-						Long risultato = OpenWebNetUtils.passwordFromSeed(seed, passwordOpen);
-						System.out.println("Tx: " + "*#" + risultato + "##");
-						outputMon.write("*#" + risultato + "##");
-						outputMon.flush();
-						statoMonitor = 2; //setto stato dopo l'autenticazione
-						setTimeout(1);
-
-					} else if(statoMonitor == 2){
-						System.out.println("\nMon: ----- STATO 2 -----");
-						System.out.println("Mon: Rx: " + responseLineMon);
-						if (responseLineMon.equals(OpenWebNet.MSG_OPEN_OK)) {
-							System.out.println("Mon: Monitor attivata con successo");
-							statoMonitor = 3;
 							break;
-						}else{
-							System.out.println("Mon: Impossibile attivare la monitor");
-							//se non mi connetto chiudo la socket
-							System.out.println("Mon: Chiudo la socket monitor\n");
-							this.close();
-							break;
-						}
-					} else break; //non dovrebbe servire (quando passo per lo stato tre esco dal ciclo con break)
-				}else{
+						case 2:
+							System.out.println("\nMon: ----- STATO 2 -----");
+							System.out.println("Mon: Rx: " + responseLineMon);
+							if (responseLineMon.equals(OpenWebNet.MSG_OPEN_OK)) {
+								System.out.println("Mon: Monitor attivata con successo");
+								statoMonitor = 3;
+								break label;
+							} else {
+								System.out.println("Mon: Impossibile attivare la monitor");
+								//se non mi connetto chiudo la socket
+								System.out.println("Mon: Chiudo la socket monitor\n");
+								this.close();
+								break label;
+							}
+						default:
+							break label;
+					}
+				} else {
 					System.out.println("Mon: Risposta dal webserver NULL");
 					this.close();
 					break;//ramo else della funzione riceviStringa()

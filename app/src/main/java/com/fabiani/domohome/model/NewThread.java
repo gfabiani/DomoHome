@@ -70,12 +70,12 @@ public class NewThread extends Thread{
 	 * Avvia il Thread per gestire il timeout
 	 */
 	public void run(){
-		do{
+		while (true) {
 			time = 1000;
 
-			try{
+			try {
 				Thread.sleep(time);
-			}catch (InterruptedException e){
+			} catch (InterruptedException e) {
 				System.out.println("Thread timeout interrotto!");
 				break;
 				//e.printStackTrace();
@@ -83,12 +83,12 @@ public class NewThread extends Thread{
 
 			System.out.println("Thread timeout SCADUTO!");
 			//chiudo il thread per la ricezione dei caratteri
-			if(tipoSocket == 0){
+			if (tipoSocket == 0) {
 				if (GestioneSocketComandi.readTh != null) GestioneSocketComandi.readTh.interrupt();
-			else
-				if (GestioneSocketMonitor.readThMon != null) GestioneSocketMonitor.readThMon.interrupt();
+				else if (GestioneSocketMonitor.readThMon != null)
+					GestioneSocketMonitor.readThMon.interrupt();
 			}
 			break;
-		}while(true);
+		}
 	}
 }

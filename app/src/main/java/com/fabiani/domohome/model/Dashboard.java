@@ -1,10 +1,11 @@
 package com.fabiani.domohome.model;
 
+import android.app.Application;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.annimon.stream.Stream;
+
 import com.fabiani.domohome.controller.SettingsFragment;
 
 import java.util.ArrayList;
@@ -13,15 +14,17 @@ import java.util.UUID;
 
 //singleton class
 
-public class Dashboard  {
+public class Dashboard {
 	private static final String TAG = "Dashboard";
 	private static Dashboard sDashboard;
+
 	private static final String JSON_FILENAME = "commands.json";
 	public  static final int PORT = 20000;
 	public static String sIp;
 	public static int sPasswordOpen;
 	private JSONSerializer mJSONSerializer;
 	private List<Command> mCommands;
+
 
 	private Dashboard(Context appContext) {
 		mJSONSerializer = new JSONSerializer(appContext, JSON_FILENAME);
@@ -49,20 +52,13 @@ public class Dashboard  {
 			sDashboard = new Dashboard(c.getApplicationContext());
 		return sDashboard;
 	}
-	public static  void inviaCommand(String openwebnetString) {
-		GestioneSocketComandi gestioneSocketComandi= new GestioneSocketComandi();
-		gestioneSocketComandi.connect(sIp, PORT, sPasswordOpen);
-		gestioneSocketComandi.invia(openwebnetString);
-		gestioneSocketComandi.close();
-	}
 
 	public List<Command> getCommands() {
 		return mCommands;
 	}
 
 	public Command getCommand(UUID id) {
-		return Stream.of(mCommands).filter(command->command.getId().equals(id)).findFirst().get();
-
+		return mCommands.stream().filter(command->command.getId().equals(id)).findFirst().get();
 	}
 
 	public void addCommand(Command c) {

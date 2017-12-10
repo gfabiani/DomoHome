@@ -26,24 +26,12 @@
     <string name="password_open_invalid">Password open invalid</string>
     <string name="commandgridgragment_valid_password">Enter password</string>
     <string name="video">Video Doorphone</string>
+    <string name="command_timeout_label">Timeout seconds</string>
     <string-array name="who_array">
         <item>Scenarios</item>
         <item>Lighting</item>
         <item>Automatism</item>
-        <item>Electrical loads</item>
-        <item>Warming management</item>
-        <item>Antitheft</item>
-        <item>Basic video doorphone</item>
-        <item>Gateway management</item>
-        <item>CEN commands</item>
-        <item>Sound diffusion</item>
-        <item>Sound diffusion 2</item>
         <item>MH200N scenarios</item>
-        <item>Power management</item>
-        <item>CEN plus etc</item>
-        <item>Automation diagnostics</item>
-        <item>Thermoregulation diagnostics</item>
-        <item>Device diagnostics</item>
     </string-array>
 
 </resources>
